@@ -10,8 +10,11 @@
 
 module.exports = function(grunt) {
 
+
   // Project configuration.
   grunt.initConfig({
+    db_fixture: grunt.file.readJSON('test/fixtures/test_db.json'),
+
     jshint: {
       all: [
         'Gruntfile.js',
@@ -28,25 +31,9 @@ module.exports = function(grunt) {
       tests: ['tmp'],
     },
 
-    // Configuration to be run (and then tested).
     deployments: {
-        local: {
-            title: "Local",
-            database: "deploy_test",
-            user: "root",
-            pass: "pass4burfield",
-            host: "localhost",  
-            url: "www.deploytest.dev:8888",
-        },
-        develop: {
-            title: "Development Server",
-            database: "ddeploy_dev", // temp
-            user: "ddeploy_dev",
-            pass: "test4test",
-            host: "localhost",      
-            url: "deploytest.com.burfield-dev.com",  
-            ssh_host: "ddeploy@134.0.18.114"  
-        },
+        local: '<%= db_fixture.local %>',
+        develop: '<%= db_fixture.develop %>'
     },
 
     // Unit tests.
@@ -55,6 +42,7 @@ module.exports = function(grunt) {
     },
 
   });
+
 
   // Actually load this plugin's task(s).
   grunt.loadTasks('tasks');

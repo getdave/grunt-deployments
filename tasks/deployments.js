@@ -36,7 +36,7 @@ module.exports = function(grunt) {
 
         // Grab the options from the shared "deployments" config options
         var target_options      = grunt.config.get('deployments')[target];
-
+        
 
         // Generate required backup directories and paths
         var local_backup_paths  = generate_backup_paths("local");
@@ -85,10 +85,15 @@ module.exports = function(grunt) {
         // Start execution
         grunt.log.subhead("Pulling database from '" + target_options.title + "' into Local");
 
+        // Dump Target DB
         db_dump(target_options, target_backup_paths );
 
         db_replace(target_options.url,local_options.url,target_backup_paths.file);
         
+        // Backup Local DB
+        db_dump(local_options, local_backup_paths);
+
+        // Import dump into Local
         db_import(local_options,target_backup_paths.file);
 
         grunt.log.subhead("Operations completed");
