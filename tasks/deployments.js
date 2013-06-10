@@ -50,11 +50,20 @@ module.exports = function(grunt) {
 
     function db_dump(env, config) {
 
-        var backup_path = "backups/" + env + "/" + grunt.template.today('yyyymmdd');
+        var cmd;
 
+        // 1) Create suitable backup directory
+        var backup_path = grunt.template.process(tpls.backup_path, { 
+            data: {
+                env: env,
+                date: grunt.template.today('yyyymmdd'),
+                time: grunt.template.today('HH-MM-ss'),
+            }
+        });
         grunt.file.mkdir(backup_path);
 
-        // Compile MYSQL cmd via Lo-Dash template string
+        
+        // 2) Compile MYSQL cmd via Lo-Dash template string
         var tpl_mysqldump = grunt.template.process(tpls.mysqldump, { 
             data: {
                 user: config.user,
@@ -65,10 +74,28 @@ module.exports = function(grunt) {
             }
         });
 
-        shell.exec(tpl_mysqldump, function(code, output) {
+
+        // 3) Test whether MYSQL DB is local or whether requires remote access via SSH
+        if (typeof config.ssh_host === "undefined") { // it's a local connection
+            grunt.log.writeln("Creating DUMP of local database");
+            cmd = tpl_mysqldump;
+            
+        } else { // it's a remote connection
+            var tpl_ssh = grunt.template.process(tpls.ssh, { 
+                data: {
+                    host: config.ssh_host
+                }
+            });
+            grunt.log.writeln("Creating DUMP of remote database");
+
+            cmd = tpl_ssh + " \ " + tpl_mysqldump;
+        }
+
+        // Execute cmd 
+        shell.exec(cmd, function(code, output) {
             // forces stdout to output
         });
-        grunt.log.debug(tpl_mysqldump);
+        
     }
 
 
@@ -80,6 +107,8 @@ module.exports = function(grunt) {
      * https://github.com/gruntjs/grunt/wiki/grunt.template
      */
     var tpls = {
+
+        backup_path: "backups/<%= env %>/<%= date %>/<%= time %>",
 
         search_replace: "sed -i '' 's/<%= search %>/<%= replace %>/g' db_backup_<%= date %>.sql",
 

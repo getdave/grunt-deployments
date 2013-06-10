@@ -44,7 +44,8 @@ module.exports = function(grunt) {
             user: "ddeploy_dev",
             pass: "test4test",
             host: "localhost",      
-            url: "deploytest.com.burfield-dev.com",      
+            url: "deploytest.com.burfield-dev.com",  
+            ssh_host: "ddeploy@134.0.18.114"  
         },
     },
 
