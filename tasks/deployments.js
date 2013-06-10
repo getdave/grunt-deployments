@@ -35,7 +35,7 @@ module.exports = function(grunt) {
         // Get the target from the CLI args
         var target = grunt.option('target');
 
-        if ( typeof grunt.config.get('deployments')[target] === "undefined")  {
+        if ( typeof target === "undefined" || typeof grunt.config.get('deployments')[target] === "undefined")  {
             grunt.fail.warn("Invalid target specified. Did you pass the wrong argument? Please check your task configuration.", 6);
         }
 
@@ -72,22 +72,27 @@ module.exports = function(grunt) {
     grunt.registerTask('db_pull', 'Pull from Database', function() {
 
         // Get the target from the CLI args
-        var target          = grunt.option('target') || 'local';
+        var target              = grunt.option('target');
+
+        if ( typeof target === "undefined" || typeof grunt.config.get('deployments')[target] === "undefined")  {
+            grunt.fail.warn("Invalid target provided. I cannot pull a database from nowhere! Please checked your configuration and provide a valid target.", 6);
+        }
 
         // Grab the options from the shared "deployments" config options
-        var options         = grunt.config.get('deployments')[target];
+        var target_options      = grunt.config.get('deployments')[target];
         
-        // Dynamically create file paths 
-        generate_backup_paths(target);
+        // Generate required backup directories and paths
+        var local_backup_paths  = generate_backup_paths("local");
+        var target_backup_paths = generate_backup_paths(target);
 
         // Start execution
         grunt.log.subhead("Pulling database from '" + target_options.title + "' into Local");
 
-        db_dump(target, options);
+        db_dump(target_options, target_backup_paths );
 
-        db_replace(options.url,local_options.url);
+        db_replace(target_options.url,local_options.url,target_backup_paths.file);
         
-        db_import(local_options);
+        db_import(local_options,target_backup_paths.file);
     }); 
 
 
