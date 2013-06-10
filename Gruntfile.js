@@ -38,15 +38,14 @@ module.exports = function(grunt) {
             host: "localhost",  
             url: "www.deploytest.dev:8888",
         },
-      /* custom_options: {
-              options: {
-                separator: ': ',
-                punctuation: ' !!!',
-              },
-              files: {
-                'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123'],
-              },
-            }, */
+        develop: {
+            title: "Development Server",
+            database: "ddeploy_dev", // temp
+            user: "ddeploy_dev",
+            pass: "test4test",
+            host: "localhost",      
+            url: "deploytest.com.burfield-dev.com",      
+        },
     },
 
     // Unit tests.
