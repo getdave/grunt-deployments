@@ -50,10 +50,12 @@ module.exports = function(grunt) {
     grunt.registerTask('db_pull', 'Pull from Database', function() {
 
         // Get the target from the CLI args
-        var target      = grunt.option('target') || 'local';
+        var target          = grunt.option('target') || 'local';
 
         // Grab the options from the shared "deployments" config options
-        var options     = grunt.config.get('deployments')[target];
+        var options         = grunt.config.get('deployments')[target];
+
+        var local_options   = grunt.config.get('deployments').local;
 
 
         // Create suitable backup directory
@@ -73,9 +75,51 @@ module.exports = function(grunt) {
 
         db_dump(options);
 
-        db_replace(options.url,grunt.config.get('deployments').local.url);
-      
+        db_replace(options.url,local_options.url);
+        
+        db_import(local_options);
     }); 
+
+
+
+    /**
+     * Imports a .sql file into the DB provided
+     */
+    function db_import(config) {
+
+        var cmd;
+
+        // 1) Create cmd string from Lo-Dash template
+        var tpl_mysql = grunt.template.process(tpls.mysql, { 
+            data: {
+                host: config.host,
+                user: config.user,
+                pass: config.pass,
+                database: config.database,
+                path: backup_file_path
+            }
+        });
+
+
+        // 2) Test whether target MYSQL DB is local or whether requires remote access via SSH
+        if (typeof config.ssh_host === "undefined") { // it's a local connection
+            grunt.log.writeln("Importing into local database");
+            cmd = tpl_mysql;           
+        } else { // it's a remote connection
+            var tpl_ssh = grunt.template.process(tpls.ssh, { 
+                data: {
+                    host: config.ssh_host
+                }
+            });
+
+            grunt.log.writeln("Importing DUMP into remote database");
+
+            cmd = tpl_ssh + " '" + tpl_mysql;
+        }
+
+         // Execute cmd 
+        shell.exec(cmd); 
+    }
 
 
 
@@ -116,8 +160,10 @@ module.exports = function(grunt) {
             cmd = tpl_ssh + " \ " + tpl_mysqldump;
         }
 
+        // Capture output...
         var output = shell.exec(cmd, {silent: true}).output;
 
+        // Write output to file using native Grunt methods
         grunt.file.write( backup_file_path, output );
        
     }
@@ -154,7 +200,7 @@ module.exports = function(grunt) {
 
         mysqldump: "mysqldump -u <%= user %> -p<%= pass %> <%= database %>",
 
-        mysql: "mysql -h <%= host %> -u <%= user %> -p<%= pass %> <%= database %>",
+        mysql: "mysql -h <%= host %> -u <%= user %> -p<%= pass %> <%= database %> < <%= path %>",
 
         ssh: "ssh <%= host %>",
 
