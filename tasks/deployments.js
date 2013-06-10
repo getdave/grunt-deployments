@@ -21,6 +21,17 @@ module.exports = function(grunt) {
 
 
 
+    // GLOBALS    
+    var backup_path,
+        backup_file_path;
+
+
+
+
+    /**
+     * DB PUSH
+     * pushes local database to remote database
+     */
     grunt.registerTask('db_push', 'Push to Database', function() {
         // Get the target from the CLI args
         var target      = grunt.option('target') || 'develop';
@@ -32,7 +43,11 @@ module.exports = function(grunt) {
     }); 
 
 
-     grunt.registerTask('db_pull', 'Pull from Database', function() {
+    /**
+     * DB PULL
+     * pulls remote database into local database
+     */
+    grunt.registerTask('db_pull', 'Pull from Database', function() {
 
         // Get the target from the CLI args
         var target      = grunt.option('target') || 'local';
@@ -40,26 +55,38 @@ module.exports = function(grunt) {
         // Grab the options from the shared "deployments" config options
         var options     = grunt.config.get('deployments')[target];
 
+
+        // Create suitable backup directory
+        // assign to global
+        backup_path = grunt.template.process(tpls.backup_path, { 
+            data: {
+                env: target,
+                date: grunt.template.today('yyyymmdd'),
+                time: grunt.template.today('HH-MM-ss'),
+            }
+        });
+
+        backup_file_path = backup_path + '/db_backup.sql';
+
+
         grunt.log.writeln("Pulling database from " + options.title);   
 
-        db_dump(target, options);
+        db_dump(options);
+
+        db_replace(options.url,grunt.config.get('deployments').local.url);
       
     }); 
 
 
 
-    function db_dump(env, config) {
+    /**
+     * Dumps a MYSQL database to a suitable backup location
+     */
+    function db_dump(config) {
 
         var cmd;
 
-        // 1) Create suitable backup directory
-        var backup_path = grunt.template.process(tpls.backup_path, { 
-            data: {
-                env: env,
-                date: grunt.template.today('yyyymmdd'),
-                time: grunt.template.today('HH-MM-ss'),
-            }
-        });
+        
         grunt.file.mkdir(backup_path);
 
         
@@ -69,8 +96,6 @@ module.exports = function(grunt) {
                 user: config.user,
                 pass: config.pass,
                 database: config.database,
-                path: backup_path,
-                date: grunt.template.today('yyyymmdd')
             }
         });
 
@@ -91,11 +116,26 @@ module.exports = function(grunt) {
             cmd = tpl_ssh + " \ " + tpl_mysqldump;
         }
 
-        // Execute cmd 
-        shell.exec(cmd, function(code, output) {
-            // forces stdout to output
-        });
+        var output = shell.exec(cmd, {silent: true}).output;
+
+        grunt.file.write( backup_file_path, output );
+       
+    }
+
+
+    function db_replace(search,replace) {
         
+        var cmd = grunt.template.process(tpls.search_replace, { 
+            data: {
+                search: search,
+                replace: replace,
+                path: backup_file_path // accessed from global var
+            }
+        });
+
+         // Execute cmd 
+        shell.exec(cmd);  
+       
     }
 
 
@@ -110,9 +150,9 @@ module.exports = function(grunt) {
 
         backup_path: "backups/<%= env %>/<%= date %>/<%= time %>",
 
-        search_replace: "sed -i '' 's/<%= search %>/<%= replace %>/g' db_backup_<%= date %>.sql",
+        search_replace: "sed -i '' 's/<%= search %>/<%= replace %>/g' <%= path %>",
 
-        mysqldump: "mysqldump -u <%= user %> -p<%= pass %> <%= database %> > <%= path %>/db_backup_<%= date %>.sql",
+        mysqldump: "mysqldump -u <%= user %> -p<%= pass %> <%= database %>",
 
         mysql: "mysql -h <%= host %> -u <%= user %> -p<%= pass %> <%= database %>",
 
