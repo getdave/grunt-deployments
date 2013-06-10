@@ -8,23 +8,18 @@
 
 'use strict';
 
-var shell = require('shell');
+var shell = require('shelljs');
 
 module.exports = function(grunt) {
 
-  // Please see the Grunt documentation for more information regarding task
-  // creation: http://gruntjs.com/creating-tasks
 
+    // Load required tasks
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-rsync');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-
-
     // GLOBALS    
     var local_options   = grunt.config.get('deployments').local;
-
-
 
 
     /**
@@ -62,6 +57,8 @@ module.exports = function(grunt) {
 
         // Import dump to target DB
         db_import(target_options, local_backup_paths.file);
+
+        grunt.log.subhead("Operations completed");
     }); 
 
 
@@ -93,7 +90,11 @@ module.exports = function(grunt) {
         db_replace(target_options.url,local_options.url,target_backup_paths.file);
         
         db_import(local_options,target_backup_paths.file);
+
+        grunt.log.subhead("Operations completed");
+
     }); 
+
 
 
     function generate_backup_paths(target) {
