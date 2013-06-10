@@ -13,13 +13,37 @@ module.exports = function(grunt) {
   // Please see the Grunt documentation for more information regarding task
   // creation: http://gruntjs.com/creating-tasks
 
-  grunt.registerMultiTask('deployments', 'Push and pull databases', function() {
-    // Merge task-specific and/or target-specific options with these defaults.
-    var options = this.options({
-   
-    });
+  
 
-    
-  });
+
+
+    grunt.registerTask('db_push', 'Push to Database', function() {
+        // Get the target from the CLI args
+        var target      = grunt.option('target') || 'develop';
+
+        // Grab the options from the shared "deployments" config options
+        var options     = grunt.config.get('deployments')[target];
+
+        grunt.log.writeln("Pushing database to " + options.title);    
+    }); 
+
+
+     grunt.registerTask('db_pull', 'Pull from Database', function() {
+
+        // Get the target from the CLI args
+        var target      = grunt.option('target') || 'local';
+
+        // Grab the options from the shared "deployments" config options
+        var options     = grunt.config.get('deployments')[target];
+
+        grunt.log.writeln("Pulling database from " + options.title);   
+    }); 
 
 };
+
+
+
+
+grunt.loadNpmTasks('grunt-exec');
+grunt.loadNpmTasks('grunt-rsync');
+grunt.loadNpmTasks('grunt-contrib-clean');

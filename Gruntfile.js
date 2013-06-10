@@ -30,22 +30,23 @@ module.exports = function(grunt) {
 
     // Configuration to be run (and then tested).
     deployments: {
-      default_options: {
-        options: {
+        local: {
+            title: "Local",
+            database: "deploy_test",
+            user: "root",
+            pass: "pass4burfield",
+            host: "localhost",  
+            url: "www.deploytest.dev:8888",
         },
-        files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123'],
-        },
-      },
-      custom_options: {
-        options: {
-          separator: ': ',
-          punctuation: ' !!!',
-        },
-        files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123'],
-        },
-      },
+      /* custom_options: {
+              options: {
+                separator: ': ',
+                punctuation: ' !!!',
+              },
+              files: {
+                'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123'],
+              },
+            }, */
     },
 
     // Unit tests.
