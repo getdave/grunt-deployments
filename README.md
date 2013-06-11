@@ -43,9 +43,10 @@ grunt.initConfig({
 
 **IMPORTANT NOTE:** The task is opinionated in that it assumes you are working on a local machine and pushing/pulling databases from/to that location. Thus it is imperative that you define a `local` target as part of your configuration.
 
-Each target expects a series of arguments to be provided to enable the task to function correctly. These are detailed below
 
 ### Arguments overview
+
+Each target expects a series of arguments to be provided to enable the task to function correctly. These are detailed below:
 
 #### title
 Type: `String`
