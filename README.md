@@ -237,4 +237,6 @@ Contributions to this plugin are most welcome. This is very much a Alpha release
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+
+* 2013-06-11   v0.1.0   Minor updates to docs including addtion of Release History section.
+* 2013-06-11   v0.0.1   Initial Plugin release.
