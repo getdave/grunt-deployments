@@ -198,7 +198,7 @@ module.exports = function(grunt) {
             });
             grunt.log.writeln("Creating DUMP of remote database");
 
-            cmd = tpl_ssh + " \ " + tpl_mysqldump;
+            cmd = tpl_ssh + " \\ " + tpl_mysqldump;
         }
 
         // Capture output...
