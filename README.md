@@ -2,7 +2,7 @@
 
 > Push/pull MYSQL databases from one location to another using Grunt. Designed to ease the pain of migrating databases from one environment (local) to another environment (remotes). Automatically updates hardcoded siteurl references and backs up source and target before any modificaitions are made.
 
-**IMPORTANT NOTE**: the authors of this script assume not responsibility for any actions which result from the usage of this script. You use it entirely at your own risk. It is strongly recommended that you test the script in a non-critical environment prior to rolling out for production use. Always manually backup your local and remote databases before using the script for the first time.
+**IMPORTANT NOTE**: the authors of this Plugin assume **no responsibility** for any actions which result from the usage of this script. You use it entirely *at your own risk*. It is *strongly* recommended that you test the script in a non-critical environment prior to rolling out for production use. *Always* manually backup your local and remote databases before using the script for the first time. No support can be provided for critical situations.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.1`
