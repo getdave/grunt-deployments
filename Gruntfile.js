@@ -32,6 +32,9 @@ module.exports = function(grunt) {
     },
 
     deployments: {
+        options: {
+            backups_dir: ''
+        },
         local: '<%= db_fixture.local %>',
         develop: '<%= db_fixture.develop %>'
     },

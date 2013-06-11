@@ -19,7 +19,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     // GLOBALS    
-    var local_options   = grunt.config.get('deployments').local;
+    var local_options   = grunt.config.get('deployments').local,
+        task_options    = grunt.config.get('deployments')['options'];
 
 
     /**
@@ -75,6 +76,8 @@ module.exports = function(grunt) {
             grunt.fail.warn("Invalid target provided. I cannot pull a database from nowhere! Please checked your configuration and provide a valid target.", 6);
         }
 
+        
+
         // Grab the options from the shared "deployments" config options
         var target_options      = grunt.config.get('deployments')[target];
         
@@ -106,9 +109,12 @@ module.exports = function(grunt) {
 
         var rtn = [];
 
+        var backups_dir = task_options['backups_dir'] || "backups";
+
         // Create suitable backup directory paths
         rtn['dir'] = grunt.template.process(tpls.backup_path, { 
             data: {
+                backups_dir: backups_dir,
                 env: target,
                 date: grunt.template.today('yyyymmdd'),
                 time: grunt.template.today('HH-MM-ss'),
@@ -238,7 +244,7 @@ module.exports = function(grunt) {
      */
     var tpls = {
 
-        backup_path: "backups/<%= env %>/<%= date %>/<%= time %>",
+        backup_path: "<%= backups_dir %>/<%= env %>/<%= date %>/<%= time %>",
 
         search_replace: "sed -i '' 's/<%= search %>/<%= replace %>/g' <%= path %>",
 
