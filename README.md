@@ -1,4 +1,4 @@
-# Grunt Deployments
+# Grunt (MYSQL) Database Deployments
 
 > Push/pull MYSQL databases from one location to another using Grunt. Designed to ease the pain of migrating databases from one environment (local) to another environment (remotes). Automatically updates hardcoded siteurl references and backs up source and target before any modificaitions are made.
 
