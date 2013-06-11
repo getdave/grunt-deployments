@@ -1,4 +1,4 @@
-# grunt-deployments
+# Grunt Deployments
 
 > Push/pull MYSQL databases from one location to another using Grunt. Designed to ease the pain of migrating databases from one environment (local) to another environment (remotes). Automatically updates hardcoded siteurl references and backs up source and target before any modificaitions are made.
 
@@ -17,14 +17,12 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile with
 grunt.loadNpmTasks('grunt-deployments');
 ```
 
-## The "deployments" task
+## Documentation
 
 ### Overview
 In your project's Gruntfile, add a section named `deployments` to the data object passed into `grunt.initConfig()`.
 
 The task expects a series of `targets`, one for each of the locations which you want to move the database to/from.
-
-You must define a `local` target.
 
 ```js
 grunt.initConfig({
@@ -43,7 +41,39 @@ grunt.initConfig({
 });
 ```
 
-**Please note:** The task is opinionated in that it assumes you are working on a local machine and pushing/pulling databases from/to that location. Thus it is imperative that you define a `local` target as part of your configuration.
+**IMPORTANT NOTE:** The task is opinionated in that it assumes you are working on a local machine and pushing/pulling databases from/to that location. Thus it is imperative that you define a `local` target as part of your configuration.
+
+Each target expects a series of arguments to be provided to enable the task to function correctly. These are detailed below
+
+### Arguments overview
+
+#### title
+Type: `String`
+Description: A proper case name for the target. Used to describe the target to humans in console output whilst the task is running.
+
+#### database
+Type: `String`
+Description: the name of the database for this target. 
+
+#### user
+Type: `String`
+Description: the database user with permissions to access and modify the database 
+
+#### pass
+Type: `String`
+Description: the password for the database user (above)
+
+#### host
+Type: `String`
+Description: the hostname for the location in which the database resides. Typically this will be `localhost`
+
+#### url
+Type: `String`
+Description: the string to search and replace within the database before it is moved to the target location. Typically this is designed for use with systems such as WordPress where the `siteurl` value is [stored in the database](http://codex.wordpress.org/Changing_The_Site_URL) and is required to be updated upon migration to a new environment. It is however suitable for replacing any single value within the database before it is moved.
+
+#### ssh_host
+Type: `String`
+Description: ssh connection string in the format `SSH_USER@SSH_HOST`. The task assumes you have ssh keys setup which allow you to remote into your server without requiring the input of a password. As this is an exhaustive topic we will not cover it here but you might like to start by reading [Github's own advice](https://help.github.com/articles/generating-ssh-keys).
 
 ### Usage
 
@@ -165,6 +195,9 @@ You may wish to have your backups reside outside the current working directory o
 
 
 ## Contributing
+
+Contributions to this plugin are most welcome. This is very much a Alpha release and so if you find a problem please consider raising a pull request or creating a Issue which describes the problem you are having and proposes a solution.
+
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
