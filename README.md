@@ -44,9 +44,44 @@ grunt.initConfig({
 **IMPORTANT NOTE:** The task is opinionated in that it assumes you are working on a local machine and pushing/pulling databases from/to that location. Thus it is imperative that you define a `local` target as part of your configuration.
 
 
-### Arguments overview
+### Available Tasks
 
-Each target expects a series of arguments to be provided to enable the task to function correctly. These are detailed below:
+The Plugin makes two new tasks available via Grunt. These are `db_pull` and `db_push`. The interface for both commands is identical:
+
+````grunt db_pull --target="%%TARGET%%" // you should replace %%TARGET%% with the name of the target you've defined in your configuration options````
+
+There is a single argument `--target` that is required each time you run either command.
+
+#### Task: db_push
+
+The `db_push` command moves your local database to a remote database location. The following process is observed:
+
+1. Takes a dump of your local database
+2. Runs a search and replace on the local dump file
+3. Backups up the target database (remote)
+4. Imports the local dump into the target database
+
+The `target` argument represents the remote target to which you wish to push your database.
+
+````grunt db_push --target="develop"````
+
+#### Task: db_pull
+
+The `db_pull` command pulls a remote database into your local environment. The following process is observed:
+
+1. Takes a dump of the remote database
+2. Runs a search and replace on the dump file
+3. Backups up your local database
+4. Imports the remote dump into your local database
+
+The `target` argument represents the remote target whose database you wish to pull into your local environment.
+
+````grunt db_pull --target="stage"````
+
+
+### Configuration
+
+Each target expects a series of configuration options to be provided to enable the task to function correctly. These are detailed below:
 
 #### title
 Type: `String`
