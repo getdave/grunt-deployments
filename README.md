@@ -221,7 +221,7 @@ Description: ssh connection string in the format `SSH_USER@SSH_HOST`. The task a
 
 ### Options
 
-#### options.backup_dir
+#### options.backups_dir
 Type: `String`
 Default value: `backups`
 
