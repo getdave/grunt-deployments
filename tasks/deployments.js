@@ -12,12 +12,6 @@ var shell = require('shelljs');
 
 module.exports = function(grunt) {
 
-
-    // Load required tasks
-    grunt.loadNpmTasks('grunt-exec');
-    grunt.loadNpmTasks('grunt-rsync');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-
     // GLOBALS    
     var local_options   = grunt.config.get('deployments').local,
         task_options    = grunt.config.get('deployments')['options'];
