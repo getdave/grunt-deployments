@@ -247,8 +247,6 @@ module.exports = function(grunt) {
         mysql: "mysql -h <%= host %> -u <%= user %> -p<%= pass %> <%= database %>",
 
         ssh: "ssh <%= host %>",
-
-        //ssh ddeploy@134.0.18.114 'mysql -h localhost -u ddeploy_dev -ptest4test ddeploy_dev' < db_backup_20130507.sql
     };
     
     
