@@ -12,9 +12,7 @@ var shell = require('shelljs');
 
 module.exports = function(grunt) {
 
-    // GLOBALS    
-    var local_options   = grunt.config.get('deployments').local,
-        task_options    = grunt.config.get('deployments')['options'];
+
 
 
     /**
@@ -22,6 +20,10 @@ module.exports = function(grunt) {
      * pushes local database to remote database
      */
     grunt.registerTask('db_push', 'Push to Database', function() {
+
+        // Options
+        var task_options    = grunt.config.get('deployments')['options'];
+
         // Get the target from the CLI args
         var target = grunt.option('target');
 
@@ -31,12 +33,12 @@ module.exports = function(grunt) {
 
         // Grab the options from the shared "deployments" config options
         var target_options      = grunt.config.get('deployments')[target];
-        
+        var local_options       = grunt.config.get('deployments').local;
 
         // Generate required backup directories and paths
-        var local_backup_paths  = generate_backup_paths("local");
-        var target_backup_paths = generate_backup_paths(target);
-        
+        var local_backup_paths  = generate_backup_paths("local", task_options);
+        var target_backup_paths = generate_backup_paths(target, task_options);
+
 
         grunt.log.subhead("Pushing database from 'Local' to '" + target_options.title + "'");
 
@@ -54,7 +56,7 @@ module.exports = function(grunt) {
         db_import(target_options, local_backup_paths.file);
 
         grunt.log.subhead("Operations completed");
-    }); 
+    });
 
 
     /**
@@ -63,6 +65,9 @@ module.exports = function(grunt) {
      */
     grunt.registerTask('db_pull', 'Pull from Database', function() {
 
+        // Options
+        var task_options    = grunt.config.get('deployments')['options'];
+
         // Get the target from the CLI args
         var target              = grunt.option('target');
 
@@ -70,14 +75,15 @@ module.exports = function(grunt) {
             grunt.fail.warn("Invalid target provided. I cannot pull a database from nowhere! Please checked your configuration and provide a valid target.", 6);
         }
 
-        
+
 
         // Grab the options from the shared "deployments" config options
         var target_options      = grunt.config.get('deployments')[target];
-        
+        var local_options       = grunt.config.get('deployments').local;
+
         // Generate required backup directories and paths
-        var local_backup_paths  = generate_backup_paths("local");
-        var target_backup_paths = generate_backup_paths(target);
+        var local_backup_paths  = generate_backup_paths("local", task_options);
+        var target_backup_paths = generate_backup_paths(target, task_options);
 
         // Start execution
         grunt.log.subhead("Pulling database from '" + target_options.title + "' into Local");
@@ -86,7 +92,7 @@ module.exports = function(grunt) {
         db_dump(target_options, target_backup_paths );
 
         db_replace(target_options.url,local_options.url,target_backup_paths.file);
-        
+
         // Backup Local DB
         db_dump(local_options, local_backup_paths);
 
@@ -95,18 +101,18 @@ module.exports = function(grunt) {
 
         grunt.log.subhead("Operations completed");
 
-    }); 
+    });
 
 
 
-    function generate_backup_paths(target) {
+    function generate_backup_paths(target, task_options) {
 
         var rtn = [];
 
         var backups_dir = task_options['backups_dir'] || "backups";
 
         // Create suitable backup directory paths
-        rtn['dir'] = grunt.template.process(tpls.backup_path, { 
+        rtn['dir'] = grunt.template.process(tpls.backup_path, {
             data: {
                 backups_dir: backups_dir,
                 env: target,
@@ -130,7 +136,7 @@ module.exports = function(grunt) {
         var cmd;
 
         // 1) Create cmd string from Lo-Dash template
-        var tpl_mysql = grunt.template.process(tpls.mysql, { 
+        var tpl_mysql = grunt.template.process(tpls.mysql, {
             data: {
                 host: config.host,
                 user: config.user,
@@ -144,9 +150,9 @@ module.exports = function(grunt) {
         // 2) Test whether target MYSQL DB is local or whether requires remote access via SSH
         if (typeof config.ssh_host === "undefined") { // it's a local connection
             grunt.log.writeln("Importing into local database");
-            cmd = tpl_mysql + " < " + src;         
+            cmd = tpl_mysql + " < " + src;
         } else { // it's a remote connection
-            var tpl_ssh = grunt.template.process(tpls.ssh, { 
+            var tpl_ssh = grunt.template.process(tpls.ssh, {
                 data: {
                     host: config.ssh_host
                 }
@@ -157,7 +163,7 @@ module.exports = function(grunt) {
             cmd = tpl_ssh + " '" + tpl_mysql + "' < " + src;
         }
 
-         // Execute cmd 
+         // Execute cmd
         shell.exec(cmd);
 
         grunt.log.oklns("Database imported succesfully");
@@ -171,12 +177,12 @@ module.exports = function(grunt) {
     function db_dump(config, output_paths) {
 
         var cmd;
-        
+
         grunt.file.mkdir(output_paths.dir);
 
-        
+
         // 2) Compile MYSQL cmd via Lo-Dash template string
-        var tpl_mysqldump = grunt.template.process(tpls.mysqldump, { 
+        var tpl_mysqldump = grunt.template.process(tpls.mysqldump, {
             data: {
                 user: config.user,
                 pass: config.pass,
@@ -189,9 +195,9 @@ module.exports = function(grunt) {
         if (typeof config.ssh_host === "undefined") { // it's a local connection
             grunt.log.writeln("Creating DUMP of local database");
             cmd = tpl_mysqldump;
-            
+
         } else { // it's a remote connection
-            var tpl_ssh = grunt.template.process(tpls.ssh, { 
+            var tpl_ssh = grunt.template.process(tpls.ssh, {
                 data: {
                     host: config.ssh_host
                 }
@@ -208,24 +214,24 @@ module.exports = function(grunt) {
         grunt.file.write( output_paths.file, output );
 
         grunt.log.oklns("Database DUMP succesfully exported to: " + output_paths.file);
-       
+
     }
 
 
     function db_replace(search,replace,output_file) {
-        
-        var cmd = grunt.template.process(tpls.search_replace, { 
+
+        var cmd = grunt.template.process(tpls.search_replace, {
             data: {
                 search: search,
                 replace: replace,
-                path: output_file 
+                path: output_file
             }
         });
 
         grunt.log.writeln("Replacing '" + search + "' with '" + replace + "' in the database.");
-         // Execute cmd 
-        shell.exec(cmd); 
-        grunt.log.oklns("Database references succesfully updated.");   
+         // Execute cmd
+        shell.exec(cmd);
+        grunt.log.oklns("Database references succesfully updated.");
     }
 
 
@@ -248,8 +254,8 @@ module.exports = function(grunt) {
 
         ssh: "ssh <%= host %>",
     };
-    
-    
+
+
 
 };
 
