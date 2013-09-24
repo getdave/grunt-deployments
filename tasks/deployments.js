@@ -187,6 +187,7 @@ module.exports = function(grunt) {
                 user: config.user,
                 pass: config.pass,
                 database: config.database,
+                host: config.host
             }
         });
 
@@ -248,7 +249,7 @@ module.exports = function(grunt) {
 
         search_replace: "sed -i '' 's/<%= search %>/<%= replace %>/g' <%= path %>",
 
-        mysqldump: "mysqldump -u <%= user %> -p<%= pass %> <%= database %>",
+        mysqldump: "mysqldump -h <%= host %> -u<%= user %> -p<%= pass %> <%= database %>",
 
         mysql: "mysql -h <%= host %> -u <%= user %> -p<%= pass %> <%= database %>",
 
