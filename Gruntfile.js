@@ -35,28 +35,25 @@ module.exports = function(grunt) {
 
     simplemocha: {
         options: {
-            globals: ['chai'],
-            reporter: 'Nyan'
+            globals: ['chai']
         },
 
         all: { 
             src: [
+              'node_modules/chai/lib/chai.js',
               'test/**/*.js'
             ] 
         }
+    },
+    deployments: {
+      
     }
 
   });
 
 
-/*   // Actually load this plugin's task(s).
+// Actually load this plugin's task(s).
   grunt.loadTasks('tasks');
-
-  // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('chai');
-  grunt.loadNpmTasks('grunt-simple-mocha'); */
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
