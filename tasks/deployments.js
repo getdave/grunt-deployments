@@ -246,7 +246,7 @@ module.exports = function(grunt) {
 
         backup_path: "<%= backups_dir %>/<%= env %>/<%= date %>/<%= time %>",
 
-        search_replace: "sed -i '' 's/<%= search %>/<%= replace %>/g' <%= path %>",
+        search_replace: "sed -i '' 's#<%= search %>#<%= replace %>#g' <%= path %>",
 
         mysqldump: "mysqldump -u <%= user %> -p<%= pass %> <%= database %>",
 
