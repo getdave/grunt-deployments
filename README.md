@@ -112,7 +112,7 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "user": "development_db_username",
   "pass": "development_db_password",
   "host": "development_db_host",  
-  "url": "development_db_url" 
+  "url": "development_db_url",
   "ssh_host": "ssh_user@ssh_host"  
 },
 "stage": {
@@ -121,7 +121,7 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "user": "stage_db_username",
   "pass": "stage_db_password",
   "host": "stage_db_host",  
-  "url": "stage_db_url" 
+  "url": "stage_db_url",
   "ssh_host": "ssh_user@ssh_host"  
 },
 "production": {
@@ -130,7 +130,7 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "user": "production_db_username",
   "pass": "production_db_password",
   "host": "production_db_host",  
-  "url": "production_db_url" 
+  "url": "production_db_url",
   "ssh_host": "ssh_user@ssh_host"  
 }
 ```
@@ -162,7 +162,7 @@ grunt.initConfig({
       "user": "development_db_username",
       "pass": "development_db_password",
       "host": "development_db_host",  
-      "url": "development_db_url" 
+      "url": "development_db_url",
       "ssh_host": "ssh_user@ssh_host"  
     },
     "stage": {
@@ -171,7 +171,7 @@ grunt.initConfig({
       "user": "stage_db_username",
       "pass": "stage_db_password",
       "host": "stage_db_host",  
-      "url": "stage_db_url" 
+      "url": "stage_db_url",
       "ssh_host": "ssh_user@ssh_host"  
     },
     "production": {
@@ -180,7 +180,7 @@ grunt.initConfig({
       "user": "production_db_username",
       "pass": "production_db_password",
       "host": "production_db_host",  
-      "url": "production_db_url" 
+      "url": "production_db_url",
       "ssh_host": "ssh_user@ssh_host"  
     }
   },
