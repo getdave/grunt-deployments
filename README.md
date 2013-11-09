@@ -229,6 +229,12 @@ A string value that represents the directory path (*relative* to your Grunt file
 
 You may wish to have your backups reside outside the current working directory of your Gruntfile. In which case simply provide the relative path eg: ````../../backups````.
 
+#### options.target
+
+Type: `String`
+Default value: ``
+
+A string value that represents the default target for the tasks. You can easily override it using the `--target` option
 
 ## Contributing
 
