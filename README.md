@@ -244,5 +244,6 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* 2013-11-12   v0.2.0   Fix escaping issues, ability to define `target` via options, README doc fixes, pass host param to mysqldump.
 * 2013-06-11   v0.1.0   Minor updates to docs including addtion of Release History section.
 * 2013-06-11   v0.0.1   Initial Plugin release.
