@@ -30,13 +30,13 @@ The task expects a series of `targets`, one for each of the locations which you 
 grunt.initConfig({
   deployments: {
     local: {
-      
+
     },
     my_target_1: {
-     
+
     },
     my_target_2: {
-     
+
     },
     // etc
   }
@@ -84,17 +84,17 @@ The `target` argument represents the remote target whose database you wish to pu
 ### Usage
 
 #### Local Target (required)
-As above, the Plugin task is opinionated. It *expects* that you are working locally and pushing/pulling from/to that location. 
+As above, the Plugin task is opinionated. It *expects* that you are working locally and pushing/pulling from/to that location.
 
 As a result, it is essential that you define a *single* target *without* an `ssh_host` parameter. This is typically named "local" for convenience.
 
 ```js
 "local": {
-  "title": "Local", 
-  "database": "local_db_name",        
+  "title": "Local",
+  "database": "local_db_name",
   "user": "local_db_username",
   "pass": "local_db_password",
-  "host": "local_db_host",  
+  "host": "local_db_host",
   "url": "local_db_url"
   // note that the `local` target does not have an "ssh_host"
 },
@@ -103,35 +103,35 @@ As a result, it is essential that you define a *single* target *without* an `ssh
 The task will assume that this target is equivilant to your `local` environment. You can call it anything you wish but it ***must not*** have an `ssh_host` parameter.
 
 #### Other Environment Targets
-All other targets *must* contain a valid `ssh_host` parameter. 
+All other targets *must* contain a valid `ssh_host` parameter.
 
 ```js
 "develop": {
-  "title": "Development", 
-  "database": "development_db_name",        
+  "title": "Development",
+  "database": "development_db_name",
   "user": "development_db_username",
   "pass": "development_db_password",
-  "host": "development_db_host",  
-  "url": "development_db_url" 
-  "ssh_host": "ssh_user@ssh_host"  
+  "host": "development_db_host",
+  "url": "development_db_url",
+  "ssh_host": "ssh_user@ssh_host"
 },
 "stage": {
-  "title": "Stage", 
-  "database": "stage_db_name",        
+  "title": "Stage",
+  "database": "stage_db_name",
   "user": "stage_db_username",
   "pass": "stage_db_password",
-  "host": "stage_db_host",  
-  "url": "stage_db_url" 
-  "ssh_host": "ssh_user@ssh_host"  
+  "host": "stage_db_host",
+  "url": "stage_db_url",
+  "ssh_host": "ssh_user@ssh_host"
 },
 "production": {
-  "title": "Production", 
-  "database": "production_db_name",        
+  "title": "Production",
+  "database": "production_db_name",
   "user": "production_db_username",
   "pass": "production_db_password",
-  "host": "production_db_host",  
-  "url": "production_db_url" 
-  "ssh_host": "ssh_user@ssh_host"  
+  "host": "production_db_host",
+  "url": "production_db_url",
+  "ssh_host": "ssh_user@ssh_host"
 }
 ```
 
@@ -147,41 +147,41 @@ grunt.initConfig({
     },
     // "Local" target
     "local": {
-      "title": "Local", 
-      "database": "local_db_name",        
+      "title": "Local",
+      "database": "local_db_name",
       "user": "local_db_username",
       "pass": "local_db_password",
-      "host": "local_db_host",  
+      "host": "local_db_host",
       "url": "local_db_url"
       // note that the `local` target does not have an "ssh_host"
     },
     // "Remote" targets
     "develop": {
-      "title": "Development", 
-      "database": "development_db_name",        
+      "title": "Development",
+      "database": "development_db_name",
       "user": "development_db_username",
       "pass": "development_db_password",
-      "host": "development_db_host",  
-      "url": "development_db_url" 
-      "ssh_host": "ssh_user@ssh_host"  
+      "host": "development_db_host",
+      "url": "development_db_url",
+      "ssh_host": "ssh_user@ssh_host"
     },
     "stage": {
-      "title": "Stage", 
-      "database": "stage_db_name",        
+      "title": "Stage",
+      "database": "stage_db_name",
       "user": "stage_db_username",
       "pass": "stage_db_password",
-      "host": "stage_db_host",  
-      "url": "stage_db_url" 
-      "ssh_host": "ssh_user@ssh_host"  
+      "host": "stage_db_host",
+      "url": "stage_db_url",
+      "ssh_host": "ssh_user@ssh_host"
     },
     "production": {
-      "title": "Production", 
-      "database": "production_db_name",        
+      "title": "Production",
+      "database": "production_db_name",
       "user": "production_db_username",
       "pass": "production_db_password",
-      "host": "production_db_host",  
-      "url": "production_db_url" 
-      "ssh_host": "ssh_user@ssh_host"  
+      "host": "production_db_host",
+      "url": "production_db_url",
+      "ssh_host": "ssh_user@ssh_host"
     }
   },
 })
@@ -197,11 +197,11 @@ Description: A proper case name for the target. Used to describe the target to h
 
 #### database
 Type: `String`
-Description: the name of the database for this target. 
+Description: the name of the database for this target.
 
 #### user
 Type: `String`
-Description: the database user with permissions to access and modify the database 
+Description: the database user with permissions to access and modify the database
 
 #### pass
 Type: `String`
