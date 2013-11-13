@@ -25,7 +25,7 @@ module.exports = function(grunt) {
         var task_options    = grunt.config.get('deployments')['options'];
 
         // Get the target from the CLI args
-        var target = grunt.option('target') || task_options['target'];
+        var target = grunt.option('target');
 
         if ( typeof target === "undefined" || typeof grunt.config.get('deployments')[target] === "undefined")  {
             grunt.fail.warn("Invalid target specified. Did you pass the wrong argument? Please check your task configuration.", 6);
@@ -69,7 +69,7 @@ module.exports = function(grunt) {
         var task_options    = grunt.config.get('deployments')['options'];
 
         // Get the target from the CLI args
-        var target              = grunt.option('target') || task_options['target'];
+        var target              = grunt.option('target');
 
         if ( typeof target === "undefined" || typeof grunt.config.get('deployments')[target] === "undefined")  {
             grunt.fail.warn("Invalid target provided. I cannot pull a database from nowhere! Please checked your configuration and provide a valid target.", 6);
@@ -154,7 +154,8 @@ module.exports = function(grunt) {
         } else { // it's a remote connection
             var tpl_ssh = grunt.template.process(tpls.ssh, {
                 data: {
-                    host: config.ssh_host
+                    host: config.ssh_host,
+                    port: config.ssh_port
                 }
             });
 
@@ -187,7 +188,6 @@ module.exports = function(grunt) {
                 user: config.user,
                 pass: config.pass,
                 database: config.database,
-                host: config.host
             }
         });
 
@@ -200,7 +200,8 @@ module.exports = function(grunt) {
         } else { // it's a remote connection
             var tpl_ssh = grunt.template.process(tpls.ssh, {
                 data: {
-                    host: config.ssh_host
+                    host: config.ssh_host,
+                    port: config.ssh_port
                 }
             });
             grunt.log.writeln("Creating DUMP of remote database");
@@ -247,13 +248,13 @@ module.exports = function(grunt) {
 
         backup_path: "<%= backups_dir %>/<%= env %>/<%= date %>/<%= time %>",
 
-        search_replace: "sed -i '' 's#<%= search %>#<%= replace %>#g' <%= path %>",
+        search_replace: "sed -i '' 's/<%= search %>/<%= replace %>/g' <%= path %>",
 
-        mysqldump: "mysqldump -h <%= host %> -u<%= user %> -p<%= pass %> <%= database %>",
+        mysqldump: "mysqldump -u <%= user %> -p<%= pass %> <%= database %>",
 
         mysql: "mysql -h <%= host %> -u <%= user %> -p<%= pass %> <%= database %>",
 
-        ssh: "ssh <%= host %>",
+        ssh: "ssh -p <%= port %>  <%= host %>",
     };
 
 

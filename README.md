@@ -103,7 +103,7 @@ As a result, it is essential that you define a *single* target *without* an `ssh
 The task will assume that this target is equivilant to your `local` environment. You can call it anything you wish but it ***must not*** have an `ssh_host` parameter.
 
 #### Other Environment Targets
-All other targets *must* contain a valid `ssh_host` parameter.
+All other targets *must* contain valid `ssh_host` and `ssh_port` parameters. If you use the default SSH port, then set `ssh_port` to `22`.
 
 ```js
 "develop": {
@@ -113,7 +113,8 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "pass": "development_db_password",
   "host": "development_db_host",
   "url": "development_db_url",
-  "ssh_host": "ssh_user@ssh_host"
+  "ssh_host": "ssh_user@ssh_host",
+  "ssh_port": "ssh_port"
 },
 "stage": {
   "title": "Stage",
@@ -122,7 +123,8 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "pass": "stage_db_password",
   "host": "stage_db_host",
   "url": "stage_db_url",
-  "ssh_host": "ssh_user@ssh_host"
+  "ssh_host": "ssh_user@ssh_host",
+  "ssh_port": "ssh_port"
 },
 "production": {
   "title": "Production",
@@ -131,7 +133,8 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "pass": "production_db_password",
   "host": "production_db_host",
   "url": "production_db_url",
-  "ssh_host": "ssh_user@ssh_host"
+  "ssh_host": "ssh_user@ssh_host",
+  "ssh_port": "ssh_port"
 }
 ```
 
