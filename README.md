@@ -219,6 +219,10 @@ Description: the string to search and replace within the database before it is m
 Type: `String`
 Description: ssh connection string in the format `SSH_USER@SSH_HOST`. The task assumes you have ssh keys setup which allow you to remote into your server without requiring the input of a password. As this is an exhaustive topic we will not cover it here but you might like to start by reading [Github's own advice](https://help.github.com/articles/generating-ssh-keys).
 
+#### ssh_port
+Type: `String`
+Description: ssh port number in case you are using a custom port to connect to your ssh host. The default ssh port is `22` so enter that if you aren't using a custom port.
+
 ### Options
 
 #### options.backups_dir
