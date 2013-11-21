@@ -154,7 +154,8 @@ module.exports = function(grunt) {
         } else { // it's a remote connection
             var tpl_ssh = grunt.template.process(tpls.ssh, {
                 data: {
-                    host: config.ssh_host
+                    host: config.ssh_host,
+                    port: config.ssh_port
                 }
             });
 
@@ -200,7 +201,8 @@ module.exports = function(grunt) {
         } else { // it's a remote connection
             var tpl_ssh = grunt.template.process(tpls.ssh, {
                 data: {
-                    host: config.ssh_host
+                    host: config.ssh_host,
+                    port: config.ssh_port
                 }
             });
             grunt.log.writeln("Creating DUMP of remote database");
@@ -253,7 +255,7 @@ module.exports = function(grunt) {
 
         mysql: "mysql -h <%= host %> -u <%= user %> -p<%= pass %> <%= database %>",
 
-        ssh: "ssh <%= host %>",
+        ssh: "ssh -p <%= port %>  <%= host %>",
     };
 
 
