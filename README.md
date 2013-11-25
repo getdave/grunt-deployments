@@ -211,6 +211,10 @@ Description: the password for the database user (above)
 Type: `String`
 Description: the hostname for the location in which the database resides. Typically this will be `localhost`
 
+#### port
+Type: `Integer`
+Description: the port that MySQL is running on. Defaults to `3306`
+
 #### url
 Type: `String`
 Description: the string to search and replace within the database before it is moved to the target location. Typically this is designed for use with systems such as WordPress where the `siteurl` value is [stored in the database](http://codex.wordpress.org/Changing_The_Site_URL) and is required to be updated upon migration to a new environment. It is however suitable for replacing any single value within the database before it is moved.
