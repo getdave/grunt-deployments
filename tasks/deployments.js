@@ -180,6 +180,10 @@ module.exports = function(grunt) {
 
         grunt.file.mkdir(output_paths.dir);
 
+        // 1) Get array of tables to ignore, as defined in the config, and format it correctly
+        if( config.ignoreTables ) {
+            var ignoreTables = '--ignore-table=' + config.database + "." + config.ignoreTables.join(' --ignore-table='+config.database+'.');
+        }        
 
         // 2) Compile MYSQL cmd via Lo-Dash template string
         var tpl_mysqldump = grunt.template.process(tpls.mysqldump, {
@@ -187,12 +191,13 @@ module.exports = function(grunt) {
                 user: config.user,
                 pass: config.pass,
                 database: config.database,
-                host: config.host
+                host: config.host,
+                ignoreTables: ignoreTables || ''
             }
         });
 
-
         // 3) Test whether MYSQL DB is local or whether requires remote access via SSH
+
         if (typeof config.ssh_host === "undefined") { // it's a local connection
             grunt.log.writeln("Creating DUMP of local database");
             cmd = tpl_mysqldump;
@@ -249,7 +254,7 @@ module.exports = function(grunt) {
 
         search_replace: "sed -i '' 's#<%= search %>#<%= replace %>#g' <%= path %>",
 
-        mysqldump: "mysqldump -h <%= host %> -u<%= user %> -p<%= pass %> <%= database %>",
+        mysqldump: "mysqldump -h <%= host %> -u<%= user %> -p<%= pass %> <%= database %> <%= ignoreTables %>",
 
         mysql: "mysql -h <%= host %> -u <%= user %> -p<%= pass %> <%= database %>",
 
