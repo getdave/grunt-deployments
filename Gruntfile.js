@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
-    db_fixture: grunt.file.readJSON('test/fixtures/test_db.json'),
+    db_fixture: grunt.file.readJSON('test/fixtures/basic_config.json'),
     vows: {
       all: {
         options: {
@@ -80,6 +80,7 @@ module.exports = function(grunt) {
     // Before generating any new files, remove any previously-created files.
     clean: {
       tests: ['tmp'],
+      backups: ['./backups'],
     },
 
     deployments: {
@@ -101,6 +102,6 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['clean', 'vows']);
 
   // By default, lint and run all tests.
-  grunt.registerTask('default', ['jshint', 'vows']);
+  grunt.registerTask('default', ['jshint', 'test']);
 
 };
