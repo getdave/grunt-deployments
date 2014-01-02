@@ -11,7 +11,7 @@ var grunt				= require('grunt'),
 
 
 
-exports.suite = vows.describe("Search and Replace").addBatch({
+exports.suite = vows.describe("Basic tests").addBatch({
 	"The dbReplace task": {
 		topic: dbReplace("foo","bar","test-file.txt", true),
 		"is not null": function (topic) {
@@ -19,12 +19,10 @@ exports.suite = vows.describe("Search and Replace").addBatch({
 		},
 		"command is composed correctly": function (topic) {
 			assert.equal(topic, "sed -i '' 's#foo#bar#g' test-file.txt");
-		}
+		},
+		// add test to check against a fixture MYSQL export file that a search and replace works as expected
 	}
-});
-
-
-exports.suite = vows.describe("DB Dump").addBatch({
+}).addBatch({
 	"The dbDump task": {
 		topic: dbDump(
 			basic_config.local,
@@ -41,7 +39,6 @@ exports.suite = vows.describe("DB Dump").addBatch({
 				fs.stat(topic.output_file, this.callback);
 			},
 			"has contents": function (err, stat) {
-				console.log(stat);
 				assert.isNull(err);
 				assert.isNotZero(stat.size);
 			}
