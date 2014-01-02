@@ -8,12 +8,15 @@
 
 'use strict';
 
+// Global
 var shell = require('shelljs');
 
+// Library modules
+var dbReplace = require('../lib/dbReplace');
+
+
+// Only Grunt registration within this "exports"
 module.exports = function(grunt) {
-
-
-
 
     /**
      * DB PUSH
@@ -47,7 +50,7 @@ module.exports = function(grunt) {
         db_dump(local_options, local_backup_paths);
 
         // Search and Replace database refs
-        db_replace( local_options.url, target_options.url, local_backup_paths.file );
+        dbReplace( local_options.url, target_options.url, local_backup_paths.file );
 
         // Dump target DB
         db_dump(target_options, target_backup_paths);
@@ -91,7 +94,7 @@ module.exports = function(grunt) {
         // Dump Target DB
         db_dump(target_options, target_backup_paths );
 
-        db_replace(target_options.url,local_options.url,target_backup_paths.file);
+        dbReplace(target_options.url,local_options.url,target_backup_paths.file);
 
         // Backup Local DB
         db_dump(local_options, local_backup_paths);
@@ -227,21 +230,7 @@ module.exports = function(grunt) {
     }
 
 
-    function db_replace(search,replace,output_file) {
-
-        var cmd = grunt.template.process(tpls.search_replace, {
-            data: {
-                search: search,
-                replace: replace,
-                path: output_file
-            }
-        });
-
-        grunt.log.writeln("Replacing '" + search + "' with '" + replace + "' in the database.");
-         // Execute cmd
-        shell.exec(cmd);
-        grunt.log.oklns("Database references succesfully updated.");
-    }
+    
 
 
 
@@ -255,7 +244,7 @@ module.exports = function(grunt) {
 
         backup_path: "<%= backups_dir %>/<%= env %>/<%= date %>/<%= time %>",
 
-        search_replace: "sed -i '' 's#<%= search %>#<%= replace %>#g' <%= path %>",
+    
 
 
         mysqldump: "mysqldump -h <%= host %> -u<%= user %> -p<%= pass %> -P<%= port %> <%= database %> <%= ignoreTables %>",

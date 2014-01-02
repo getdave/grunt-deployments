@@ -6,6 +6,8 @@
  * Licensed under the MIT license.
  */
 
+'use strict';
+
 module.exports = function(grunt) {
 
   // load all grunt tasks
@@ -81,8 +83,12 @@ module.exports = function(grunt) {
     },
 
     deployments: {
-
-    }
+        options: {
+            backups_dir: ''
+        },
+        local: '<%= db_fixture.local %>', // make sure you've created valid fixture DB creds
+        develop: '<%= db_fixture.develop %>' // make sure you've created valid fixture DB creds
+    },
 
   });
 
