@@ -10,11 +10,13 @@ var grunt				= require('grunt'),
 
 exports.suite = vows.describe("Search and Replace").addBatch({
 	"The dbReplace task": {
-		topic: dbReplace,
+		topic: dbReplace("foo","bar","test-file.txt"),
 		"is not null": function (topic) {
 			assert.isNotNull(topic);
 		},
-
+		"command is composed correctly": function (topic) {
+			assert.equal(topic, "sed -i '' 's#foo#bar#g' test-file.txt");
+		}
 	}
 });
 
