@@ -178,12 +178,13 @@ module.exports = function(grunt) {
     function db_dump(config, output_paths) {
 
         var cmd;
+        var ignoreTables;
 
         grunt.file.mkdir(output_paths.dir);
 
         // 1) Get array of tables to ignore, as defined in the config, and format it correctly
         if( config.ignoreTables ) {
-            var ignoreTables = '--ignore-table=' + config.database + "." + config.ignoreTables.join(' --ignore-table='+config.database+'.');
+             ignoreTables = '--ignore-table=' + config.database + "." + config.ignoreTables.join(' --ignore-table='+config.database+'.');
         }        
 
         // 2) Compile MYSQL cmd via Lo-Dash template string
