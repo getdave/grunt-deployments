@@ -95,7 +95,8 @@ As a result, it is essential that you define a *single* target *without* an `ssh
   "user": "local_db_username",
   "pass": "local_db_password",
   "host": "local_db_host",
-  "url": "local_db_url"
+  "url": "local_db_url",
+  "ignoreTables": ["table1","table2",...]
   // note that the `local` target does not have an "ssh_host"
 },
 ```
@@ -113,7 +114,8 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "pass": "development_db_password",
   "host": "development_db_host",
   "url": "development_db_url",
-  "ssh_host": "ssh_user@ssh_host"
+  "ssh_host": "ssh_user@ssh_host",
+  "ignoreTables": ["table1","table2",...]
 },
 "stage": {
   "title": "Stage",
@@ -122,7 +124,8 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "pass": "stage_db_password",
   "host": "stage_db_host",
   "url": "stage_db_url",
-  "ssh_host": "ssh_user@ssh_host"
+  "ssh_host": "ssh_user@ssh_host",
+  "ignoreTables": ["table1","table2",...]
 },
 "production": {
   "title": "Production",
@@ -131,7 +134,8 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "pass": "production_db_password",
   "host": "production_db_host",
   "url": "production_db_url",
-  "ssh_host": "ssh_user@ssh_host"
+  "ssh_host": "ssh_user@ssh_host",
+  "ignoreTables": ["table1","table2",...]
 }
 ```
 
@@ -152,7 +156,8 @@ grunt.initConfig({
       "user": "local_db_username",
       "pass": "local_db_password",
       "host": "local_db_host",
-      "url": "local_db_url"
+      "url": "local_db_url",
+      "ignoreTables": ["table1","table2",...]
       // note that the `local` target does not have an "ssh_host"
     },
     // "Remote" targets
@@ -163,7 +168,8 @@ grunt.initConfig({
       "pass": "development_db_password",
       "host": "development_db_host",
       "url": "development_db_url",
-      "ssh_host": "ssh_user@ssh_host"
+      "ssh_host": "ssh_user@ssh_host",
+      "ignoreTables": ["table1","table2",...]
     },
     "stage": {
       "title": "Stage",
@@ -172,7 +178,8 @@ grunt.initConfig({
       "pass": "stage_db_password",
       "host": "stage_db_host",
       "url": "stage_db_url",
-      "ssh_host": "ssh_user@ssh_host"
+      "ssh_host": "ssh_user@ssh_host",
+      "ignoreTables": ["table1","table2",...]
     },
     "production": {
       "title": "Production",
@@ -181,7 +188,8 @@ grunt.initConfig({
       "pass": "production_db_password",
       "host": "production_db_host",
       "url": "production_db_url",
-      "ssh_host": "ssh_user@ssh_host"
+      "ssh_host": "ssh_user@ssh_host",
+      "ignoreTables": ["table1","table2",...]
     }
   },
 })
@@ -211,6 +219,10 @@ Description: the password for the database user (above)
 Type: `String`
 Description: the hostname for the location in which the database resides. Typically this will be `localhost`
 
+#### port
+Type: `Integer`
+Description: the port that MySQL is running on. Defaults to `3306`
+
 #### url
 Type: `String`
 Description: the string to search and replace within the database before it is moved to the target location. Typically this is designed for use with systems such as WordPress where the `siteurl` value is [stored in the database](http://codex.wordpress.org/Changing_The_Site_URL) and is required to be updated upon migration to a new environment. It is however suitable for replacing any single value within the database before it is moved.
@@ -218,6 +230,10 @@ Description: the string to search and replace within the database before it is m
 #### ssh_host
 Type: `String`
 Description: ssh connection string in the format `SSH_USER@SSH_HOST`. The task assumes you have ssh keys setup which allow you to remote into your server without requiring the input of a password. As this is an exhaustive topic we will not cover it here but you might like to start by reading [Github's own advice](https://help.github.com/articles/generating-ssh-keys).
+
+#### ignoreTables
+Type: `Array of Strings`
+Description: tables to ignore. They won't be in the dump — neither their structure nor their content.
 
 ### Options
 
@@ -238,12 +254,18 @@ A string value that represents the default target for the tasks. You can easily 
 
 ## Contributing
 
-Contributions to this plugin are most welcome. This is very much a Alpha release and so if you find a problem please consider raising a pull request or creating a Issue which describes the problem you are having and proposes a solution.
+Contributions to this plugin are most welcome. Pull requests are preferred but input on open Issues is also most agreeable!
+
+This is very much a Alpha release and so if you find a problem please consider raising a pull request or creating a Issue which describes the problem you are having and proposes a solution.
+
+### Branches and merge strategy
+All pull requests should merged into the `develop` branch. __Please do not merge into the `master` branch__.
 
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
 
+* 2013-12-09   v0.3.0   Added `ignoreTables` option.
 * 2013-11-12   v0.2.0   Fix escaping issues, ability to define `target` via options, README doc fixes, pass host param to mysqldump.
 * 2013-06-11   v0.1.0   Minor updates to docs including addtion of Release History section.
 * 2013-06-11   v0.0.1   Initial Plugin release.
