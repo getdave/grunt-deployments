@@ -34,10 +34,20 @@ exports.suite = vows.describe("DB Dump").addBatch({
 			assert.isNotNull(topic);
 		},
 		"command is composed correctly using basic data": function (topic) {
-			assert.equal(topic.trim(), "mysqldump -h localhost -uroot -ppass4burfield -P3306 deploy_test");
-		}		
+			assert.equal(topic.cmd.trim(), "mysqldump -h localhost -uroot -ppass4burfield -P3306 deploy_test");
+		},
+		"results in a .sql file that": {
+			topic: function (topic) {
+				fs.stat(topic.output_file, this.callback);
+			},
+			"has contents": function (err, stat) {
+				console.log(stat);
+				assert.isNull(err);
+				assert.isNotZero(stat.size);
+			}
+		}
 	}
-}); 
+});
 
 
 
