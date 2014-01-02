@@ -115,6 +115,7 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "host": "development_db_host",
   "url": "development_db_url",
   "ssh_host": "ssh_user@ssh_host",
+  "ssh_port": "ssh_port",
   "ignoreTables": ["table1","table2",...]
 },
 "stage": {
@@ -125,6 +126,7 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "host": "stage_db_host",
   "url": "stage_db_url",
   "ssh_host": "ssh_user@ssh_host",
+  "ssh_port": "ssh_port",
   "ignoreTables": ["table1","table2",...]
 },
 "production": {
@@ -135,6 +137,7 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "host": "production_db_host",
   "url": "production_db_url",
   "ssh_host": "ssh_user@ssh_host",
+  "ssh_port": "ssh_port",
   "ignoreTables": ["table1","table2",...]
 }
 ```
@@ -169,6 +172,7 @@ grunt.initConfig({
       "host": "development_db_host",
       "url": "development_db_url",
       "ssh_host": "ssh_user@ssh_host",
+      "ssh_port": "ssh_port",
       "ignoreTables": ["table1","table2",...]
     },
     "stage": {
@@ -179,6 +183,7 @@ grunt.initConfig({
       "host": "stage_db_host",
       "url": "stage_db_url",
       "ssh_host": "ssh_user@ssh_host",
+      "ssh_port": "ssh_port",
       "ignoreTables": ["table1","table2",...]
     },
     "production": {
@@ -189,6 +194,7 @@ grunt.initConfig({
       "host": "production_db_host",
       "url": "production_db_url",
       "ssh_host": "ssh_user@ssh_host",
+      "ssh_port": "ssh_port",
       "ignoreTables": ["table1","table2",...]
     }
   },
@@ -229,7 +235,12 @@ Description: the string to search and replace within the database before it is m
 
 #### ssh_host
 Type: `String`
-Description: ssh connection string in the format `SSH_USER@SSH_HOST`. The task assumes you have ssh keys setup which allow you to remote into your server without requiring the input of a password. As this is an exhaustive topic we will not cover it here but you might like to start by reading [Github's own advice](https://help.github.com/articles/generating-ssh-keys).
+Description: SSH connection string in the format `SSH_USER@SSH_HOST`. The task assumes you have SSH keys setup which allow you to remote into your server without requiring the input of a password. As this is an exhaustive topic we will not cover it here but you might like to start by reading [Github's own advice](https://help.github.com/articles/generating-ssh-keys).
+
+#### ssh_port
+Type: `String`
+Default value: `22`
+Description: SSH port number in the format `#####`. If you leave this off for a remote connection, the plugin will default to the standard SSH port of `22`.
 
 #### ignoreTables
 Type: `Array of Strings`
