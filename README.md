@@ -254,7 +254,12 @@ A string value that represents the default target for the tasks. You can easily 
 
 ## Contributing
 
-Contributions to this plugin are most welcome. This is very much a Alpha release and so if you find a problem please consider raising a pull request or creating a Issue which describes the problem you are having and proposes a solution.
+Contributions to this plugin are most welcome. Pull requests are preferred but input on open Issues is also most agreeable!
+
+This is very much a Alpha release and so if you find a problem please consider raising a pull request or creating a Issue which describes the problem you are having and proposes a solution.
+
+### Branches and merge strategy
+All pull requests should merged into the `develop` branch. __Please do not merge into the `master` branch__.
 
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
