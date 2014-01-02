@@ -12,8 +12,9 @@
 var shell = require('shelljs');
 
 // Library modules
-var dbReplace = require('../lib/dbReplace');
-
+var tpls        = require('../lib/tpls');
+var dbReplace   = require('../lib/dbReplace');
+var dbDump      = require('../lib/dbDump');
 
 // Only Grunt registration within this "exports"
 module.exports = function(grunt) {
@@ -47,13 +48,13 @@ module.exports = function(grunt) {
 
 
         // Dump local DB
-        db_dump(local_options, local_backup_paths);
+        dbDump(local_options, local_backup_paths);
 
         // Search and Replace database refs
         dbReplace( local_options.url, target_options.url, local_backup_paths.file );
 
         // Dump target DB
-        db_dump(target_options, target_backup_paths);
+        dbDump(target_options, target_backup_paths);
 
         // Import dump to target DB
         db_import(target_options, local_backup_paths.file);
@@ -92,12 +93,12 @@ module.exports = function(grunt) {
         grunt.log.subhead("Pulling database from '" + target_options.title + "' into Local");
 
         // Dump Target DB
-        db_dump(target_options, target_backup_paths );
+        dbDump(target_options, target_backup_paths );
 
         dbReplace(target_options.url,local_options.url,target_backup_paths.file);
 
         // Backup Local DB
-        db_dump(local_options, local_backup_paths);
+        dbDump(local_options, local_backup_paths);
 
         // Import dump into Local
         db_import(local_options,target_backup_paths.file);
@@ -175,59 +176,7 @@ module.exports = function(grunt) {
 
 
 
-    /**
-     * Dumps a MYSQL database to a suitable backup location
-     */
-    function db_dump(config, output_paths) {
-
-        var cmd;
-        var ignoreTables;
-
-        grunt.file.mkdir(output_paths.dir);
-
-        // 1) Get array of tables to ignore, as defined in the config, and format it correctly
-        if( config.ignoreTables ) {
-             ignoreTables = '--ignore-table=' + config.database + "." + config.ignoreTables.join(' --ignore-table='+config.database+'.');
-        }        
-
-        // 2) Compile MYSQL cmd via Lo-Dash template string
-        var tpl_mysqldump = grunt.template.process(tpls.mysqldump, {
-            data: {
-                user: config.user,
-                pass: config.pass,
-                database: config.database,
-                host: config.host,
-                port: config.port || 3306,
-                ignoreTables: ignoreTables || ''
-            }
-        });
-
-        // 3) Test whether MYSQL DB is local or whether requires remote access via SSH
-
-        if (typeof config.ssh_host === "undefined") { // it's a local connection
-            grunt.log.writeln("Creating DUMP of local database");
-            cmd = tpl_mysqldump;
-
-        } else { // it's a remote connection
-            var tpl_ssh = grunt.template.process(tpls.ssh, {
-                data: {
-                    host: config.ssh_host
-                }
-            });
-            grunt.log.writeln("Creating DUMP of remote database");
-
-            cmd = tpl_ssh + " \\ " + tpl_mysqldump;
-        }
-
-        // Capture output...
-        var output = shell.exec(cmd, {silent: true}).output;
-
-        // Write output to file using native Grunt methods
-        grunt.file.write( output_paths.file, output );
-
-        grunt.log.oklns("Database DUMP succesfully exported to: " + output_paths.file);
-
-    }
+    
 
 
     
@@ -235,25 +184,7 @@ module.exports = function(grunt) {
 
 
 
-     /**
-     * Lo-Dash Template Helpers
-     * http://lodash.com/docs/#template
-     * https://github.com/gruntjs/grunt/wiki/grunt.template
-     */
-    var tpls = {
 
-        backup_path: "<%= backups_dir %>/<%= env %>/<%= date %>/<%= time %>",
-
-    
-
-
-        mysqldump: "mysqldump -h <%= host %> -u<%= user %> -p<%= pass %> -P<%= port %> <%= database %> <%= ignoreTables %>",
-
-
-        mysql: "mysql -h <%= host %> -u <%= user %> -p<%= pass %> -P<%= port %> <%= database %>",
-
-        ssh: "ssh <%= host %>",
-    };
 
 
 

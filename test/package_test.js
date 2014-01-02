@@ -3,19 +3,18 @@
 var grunt				= require('grunt'),
 	vows				= require("vows"),
 	assert				= require("assert"),
-	db_replace			= require('../lib/db_replace');
+	dbReplace			= require('../lib/dbReplace'),
+	dbDump				= require('../lib/dbDump');
 
 
 
 exports.suite = vows.describe("Search and Replace").addBatch({
-	"The db_replace task": {
-		topic: db_replace,
+	"The dbReplace task": {
+		topic: dbReplace,
 		"is not null": function (topic) {
 			assert.isNotNull(topic);
 		},
-		"is a function": function (topic) {
-			assert.isFunction(topic);
-		},
+
 	}
 });
 
