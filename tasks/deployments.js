@@ -142,7 +142,8 @@ module.exports = function(grunt) {
                 user: config.user,
                 pass: config.pass,
                 database: config.database,
-                path: src
+                path: src,
+                port: config.port || 3306
             }
         });
 
@@ -187,7 +188,8 @@ module.exports = function(grunt) {
                 user: config.user,
                 pass: config.pass,
                 database: config.database,
-                host: config.host
+                host: config.host,
+                port: config.port || 3306
             }
         });
 
@@ -249,9 +251,9 @@ module.exports = function(grunt) {
 
         search_replace: "sed -i '' 's#<%= search %>#<%= replace %>#g' <%= path %>",
 
-        mysqldump: "mysqldump -h <%= host %> -u<%= user %> -p<%= pass %> <%= database %>",
+        mysqldump: "mysqldump -h <%= host %> -u<%= user %> -p<%= pass %> -P<%= port %> <%= database %>",
 
-        mysql: "mysql -h <%= host %> -u <%= user %> -p<%= pass %> <%= database %>",
+        mysql: "mysql -h <%= host %> -u <%= user %> -p<%= pass %> -P<%= port %> <%= database %>",
 
         ssh: "ssh <%= host %>",
     };
