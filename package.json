@@ -31,7 +31,8 @@
   "dependencies": {
     "shelljs": "~0.2.6",
     "fs-extra": "~0.8.1",
-    "search-replace-db": "git+ssh://git@github.com:getdave/Search-Replace-DB.git#e26fba07b91a8c18aedffc9e277716f5e0d46043"
+    "search-replace-db": "git+ssh://git@github.com:getdave/Search-Replace-DB.git#e26fba07b91a8c18aedffc9e277716f5e0d46043",
+    "ssh2": "~0.2.15"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
