@@ -111,14 +111,14 @@ module.exports = function(grunt) {
         // Dump (backup) the source DB
         dbDump(src_options, src_backup_paths );
 
-        // Performance search and replace on DUMP
-        dbReplace(src_options.url,dest_options.url,src_backup_paths);
-
         // Backup Local DB
         dbDump(dest_options, dest_backup_paths);
 
         // Import dump into Local
-        dbImport(dest_options,src_backup_paths["file-tmp"]);
+        dbImport(dest_options,src_backup_paths.file);
+        
+        // Performance search and replace on DUMP
+        dbReplace(dest_options, src_options.url, dest_options.url);
 
         // Clean up tmp directory
         fs.removeSync(src_backup_paths["dir-tmp"], function (err) {
