@@ -151,7 +151,8 @@ grunt.initConfig({
       "pass": "development_db_password",
       "host": "development_db_host",
       "url": "development_db_url",
-      "ssh_host": "ssh_user@ssh_host",
+      "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
+      "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
       "ignoreTables": ["table1","table2",...]
     },
     "stage": {
@@ -161,7 +162,8 @@ grunt.initConfig({
       "pass": "stage_db_password",
       "host": "stage_db_host",
       "url": "stage_db_url",
-      "ssh_host": "ssh_user@ssh_host",
+      "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
+      "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
       "ignoreTables": ["table1","table2",...]
     },
     "production": {
@@ -171,7 +173,8 @@ grunt.initConfig({
       "pass": "production_db_password",
       "host": "production_db_host",
       "url": "production_db_url",
-      "ssh_host": "ssh_user@ssh_host",
+      "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
+      "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
       "ignoreTables": ["table1","table2",...]
     }
   },
@@ -258,8 +261,6 @@ I prefer to utilise a `.json` or `.yaml` file to store your targets as [Grunt pr
     "pass": "local_db_password",
     "host": "local_db_host",
     "url": "local_db_url",
-    "ignoreTables": ["table1","table2",...]
-    // note that the `local` target does not have an "ssh_host"
   },
   "develop": {
     "title": "Development",
@@ -268,8 +269,6 @@ I prefer to utilise a `.json` or `.yaml` file to store your targets as [Grunt pr
     "pass": "development_db_password",
     "host": "development_db_host",
     "url": "development_db_url",
-    "ssh_host": "ssh_user@ssh_host",
-    "ignoreTables": ["table1","table2",...]
   },
 }
 ```
