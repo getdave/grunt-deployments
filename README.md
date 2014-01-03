@@ -258,6 +258,17 @@ Contributions to this plugin are most welcome. Pull requests are preferred but i
 
 This is very much a Alpha release and so if you find a problem please consider raising a pull request or creating a Issue which describes the problem you are having and proposes a solution.
 
+### Testing
+This project uses [Vows](http://vowsjs.org/) for BDD testing. Run the tests via Grunt using
+
+````
+grunt test
+````
+
+New features should pass all current tests and add new tests as required. Please feel free to contribute new/improved tests.
+
+
+
 ### Branches and merge strategy
 All pull requests should merged into the `develop` branch. __Please do not merge into the `master` branch__.
 
