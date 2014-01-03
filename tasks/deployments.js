@@ -10,6 +10,7 @@
 
 // Global
 var shell = require('shelljs');
+var fs    = require('fs-extra');
 
 // Library modules
 var tpls                    = require('../lib/tpls');
@@ -111,13 +112,18 @@ module.exports = function(grunt) {
         dbDump(src_options, src_backup_paths );
 
         // Performance search and replace on DUMP
-        dbReplace(src_options.url,dest_options.url,src_backup_paths.file);
+        dbReplace(src_options.url,dest_options.url,src_backup_paths);
 
         // Backup Local DB
         dbDump(dest_options, dest_backup_paths);
 
         // Import dump into Local
-        dbImport(dest_options,src_backup_paths.file);
+        dbImport(dest_options,src_backup_paths["file-tmp"]);
+
+        // Clean up tmp directory
+        fs.removeSync(src_backup_paths["dir-tmp"], function (err) {
+          if (err) throw err;
+        });
 
         grunt.log.subhead("Operations completed");
 

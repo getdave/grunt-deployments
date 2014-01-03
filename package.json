@@ -29,7 +29,8 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "shelljs": "~0.2.6"
+    "shelljs": "~0.2.6",
+    "fs-extra": "~0.8.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
