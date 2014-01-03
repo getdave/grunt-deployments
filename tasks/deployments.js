@@ -122,7 +122,9 @@ module.exports = function(grunt) {
 
         // Clean up tmp directory
         fs.removeSync(src_backup_paths["dir-tmp"], function (err) {
-          if (err) throw err;
+            if (err) {
+                throw err;
+            }
         });
 
         grunt.log.subhead("Operations completed");
