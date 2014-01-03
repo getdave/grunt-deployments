@@ -77,17 +77,24 @@ module.exports = function(grunt) {
 
         // Get the source from the CLI args
         var src                 = grunt.option('src') || task_options['src'];
-        if ( typeof src === "undefined" || typeof grunt.config.get('deployments')[src] === "undefined")  {
-            grunt.fail.warn("Invalid source provided. I cannot pull a database from nowhere! Please checked your configuration and provide a valid source.", 6);
+        if ( typeof src === "undefined")  {
+            grunt.fail.warn("Invalid source provided. I cannot pull a database from nowhere! Please checked your CLI 'dest' argument is valid.", 6);
+        } else if (typeof grunt.config.get('deployments')[src] === "undefined") {
+            grunt.fail.warn("Invalid source provided. I cannot pull a database from nowhere! Please checked your Grunt task configuration.", 6);
         }
 
         // Get the destination from the CLI args
         var dest                = grunt.option('dest') || task_options['dest'];
-        if ( typeof dest === "undefined" || typeof grunt.config.get('deployments')[dest] === "undefined")  {
-            grunt.fail.warn("Invalid destination provided. I cannot move a database to a non existent location! Please checked your configuration and provide a valid destination.", 6);
+
+        // Default to "local" if no destination is provided
+        if ( typeof dest === "undefined" ) {
+            dest = "local";
         }
 
-
+        // Check destination is valid
+        if ( typeof grunt.config.get('deployments')[dest] === "undefined")  {
+            grunt.fail.warn("Invalid destination provided. I cannot move a database to a non existent location! Please checked your Grunt task configuration and provide a valid destination.", 6);
+        }
 
         // Grab the options from the shared "deployments" config options
         var src_options         = grunt.config.get('deployments')[src];
