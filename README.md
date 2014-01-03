@@ -43,50 +43,34 @@ grunt.initConfig({
 });
 ```
 
-**IMPORTANT NOTE:** The task is opinionated in that it assumes you are working on a local machine and pushing/pulling databases from/to that location. Thus it is imperative that you define a `local` target as part of your configuration.
+**UPDATE:** The task was originally opinionated in that it once assumed you were working on a local machine and pushing/pulling databases from/to that location. Therefore it *was* imperative that you defined a `local` target as part of your configuration. The task has now been updated to allow you to avoid having to utilise a "local" target. We still advise however, that you define a "local" target as a fallback.
+
+Please ensure you read the full Configuration documentation below before proceeding.
 
 
 ### Available Tasks
 
-The Plugin makes two new tasks available via Grunt. These are `db_pull` and `db_push`. The interface for both commands is identical:
+The Plugin makes use of a **single** task `db_pull`. The interface for this command is as follows:
 
-````grunt db_pull --target="%%TARGET%%" // replace %%TARGET%% with the target you've defined in your config ````
+````grunt db_pull````
 
-There is a single argument `--target` that is required each time you run either command.
+There are two flags that should be used each time you run either command:
 
-#### Task: db_push
+* `--src` - the source database from which you wish to export your SQL
+* `--dest` - the destination database into which you would like to import your SQL
 
-The `db_push` command moves your **local** database to a **remote** database location. The following process is observed:
+#### Example
 
-1. Takes a dump of your local database
-2. Runs a search and replace on the local dump file
-3. Backups up the target database (remote)
-4. Imports the local dump into the target database
+````grunt db_pull --src="%%SOURCE_DB%%" --dest="%%DESTINATION_DB%%"````
 
-The `target` argument represents the remote target to which you wish to push your database.
+__Note:__ only `src` is required. If `dest` is not provided the task will automatically assume you wish to use the `local` target defined in your Grunt task configuration. This is for ease of use and also to maintain backwards compatibility with the older CLI.
 
-````grunt db_push --target="develop"````
-
-#### Task: db_pull
-
-The `db_pull` command pulls a **remote** database into your **local** environment. The following process is observed:
-
-1. Takes a dump of the remote database
-2. Runs a search and replace on the dump file
-3. Backups up your local database
-4. Imports the remote dump into your local database
-
-The `target` argument represents the remote target whose database you wish to pull into your local environment. Eg:
-
-````grunt db_pull --target="stage"````
-
-
-### Usage
+### Configuration
 
 #### Local Target (required)
-As above, the Plugin task is opinionated. It *expects* that you are working locally and pushing/pulling from/to that location.
+Whilst the Plugin task (no longer) forces you to define a "local" target, we still advise that you always define one. This is because the `local` target will be used as the default destination if one is not explicity provided.
 
-As a result, it is essential that you define a *single* target *without* an `ssh_host` parameter. This is typically named "local" for convenience.
+Your local target should not require a `ssh_host` parameter and, to avoid complication, should be named exactly as `"local"`.
 
 ```js
 "local": {
@@ -101,10 +85,10 @@ As a result, it is essential that you define a *single* target *without* an `ssh
 },
 ```
 
-The task will assume that this target is equivilant to your `local` environment. You can call it anything you wish but it ***must not*** have an `ssh_host` parameter.
+Again, the "local" target ***must not*** have an `ssh_host` parameter.
 
 #### Other Environment Targets
-All other targets *must* contain a valid `ssh_host` parameter.
+All other targets may contain valid ssh credentials.
 
 ```js
 "develop": {
@@ -114,7 +98,8 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "pass": "development_db_password",
   "host": "development_db_host",
   "url": "development_db_url",
-  "ssh_host": "ssh_user@ssh_host",
+  "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
+  "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
   "ignoreTables": ["table1","table2",...]
 },
 "stage": {
@@ -124,7 +109,8 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "pass": "stage_db_password",
   "host": "stage_db_host",
   "url": "stage_db_url",
-  "ssh_host": "ssh_user@ssh_host",
+  "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
+  "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
   "ignoreTables": ["table1","table2",...]
 },
 "production": {
@@ -134,7 +120,8 @@ All other targets *must* contain a valid `ssh_host` parameter.
   "pass": "production_db_password",
   "host": "production_db_host",
   "url": "production_db_url",
-  "ssh_host": "ssh_user@ssh_host",
+  "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
+  "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
   "ignoreTables": ["table1","table2",...]
 }
 ```
@@ -227,13 +214,17 @@ Description: the port that MySQL is running on. Defaults to `3306`
 Type: `String`
 Description: the string to search and replace within the database before it is moved to the target location. Typically this is designed for use with systems such as WordPress where the `siteurl` value is [stored in the database](http://codex.wordpress.org/Changing_The_Site_URL) and is required to be updated upon migration to a new environment. It is however suitable for replacing any single value within the database before it is moved.
 
+#### ssh_user
+Type: `String`
+Description: any valid ssh user. The task assumes you have ssh keys setup which allow you to remote into your server without requiring the input of a password. As this is an exhaustive topic we will not cover it here but you might like to start by reading [Github's own advice](https://help.github.com/articles/generating-ssh-keys).
+
 #### ssh_host
 Type: `String`
-Description: ssh connection string in the format `SSH_USER@SSH_HOST`. The task assumes you have ssh keys setup which allow you to remote into your server without requiring the input of a password. As this is an exhaustive topic we will not cover it here but you might like to start by reading [Github's own advice](https://help.github.com/articles/generating-ssh-keys).
+Description: any valid ssh host string ~~in the format `SSH_USER@SSH_HOST`~~. The task assumes you have ssh keys setup which allow you to remote into your server without requiring the input of a password. As this is an exhaustive topic we will not cover it here but you might like to start by reading [Github's own advice](https://help.github.com/articles/generating-ssh-keys).
 
 #### ignoreTables
-Type: `Array of Strings`
-Description: tables to ignore. They won't be in the dump — neither their structure nor their content.
+Type: `Array`
+Description: a list of tables to ignore in array format. Tables defined here will be ommitted from the dump. Neither their structure nor their content will be included.
 
 ### Options
 
@@ -245,18 +236,20 @@ A string value that represents the directory path (*relative* to your Grunt file
 
 You may wish to have your backups reside outside the current working directory of your Gruntfile. In which case simply provide the relative path eg: ````../../backups````.
 
-#### options.target
+#### options.target (deprecated)
 
-Type: `String`
-Default value: ``
+*The task now requires `src` and `dest` parameters. If no `dest` is provided then the `local` target will be preffered.*
 
-A string value that represents the default target for the tasks. You can easily override it using the `--target` option
+~~Type: `String`~~
+~~Default value: ``~~
+
+~~A string value that represents the default target for the tasks. You can easily override it using the `--target` option~~
 
 ## Contributing
 
 Contributions to this plugin are most welcome. Pull requests are preferred but input on open Issues is also most agreeable!
 
-This is very much a Alpha release and so if you find a problem please consider raising a pull request or creating a Issue which describes the problem you are having and proposes a solution.
+I still consider this a Beta release and so if you find a problem please help me out by raising a pull request or creating a Issue which describes the problem you are having and proposes a solution.
 
 ### Testing
 This project uses [Vows](http://vowsjs.org/) for BDD testing. Run the tests via Grunt using
@@ -274,9 +267,23 @@ All pull requests should merged into the `develop` branch. __Please do not merge
 
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
+## Update Guide
+
+### v0.4.0
+
+As of `v0.4.0` the task has received several major updates. If you have used an older version of the Plugin then it's really easy to upgrade. Please check the following:
+
+1) You should only utilise the `db_pull` command. 
+2) `--target` is no longer a valid CLI parameter. Instead please pass `--src` and `--dest` which match those defined in your Grunt config.
+3) In your Grunt config, check that you have defined `ssh_user` and `ssh_host` separately. `ssh_host` is now only the actual hostname. The `ssh_user` option is provided separately to accept your SSH username (see docs),
+4) You are no longer forced to utilise a "Local" target. However we still advise defining one (see docs).
+
+If you notice any other issues please raise and issue or submit a valid pull request.
+
 ## Release History
 
-* 2013-12-09   v0.3.0   Added `ignoreTables` option.
+* 2014-01-03   v0.4.0   Major updates to streamline task. See "Update Guide" above.
+* 2013-12-09   v0.3.0   Added `ignoreTables` option.
 * 2013-11-12   v0.2.0   Fix escaping issues, ability to define `target` via options, README doc fixes, pass host param to mysqldump.
 * 2013-06-11   v0.1.0   Minor updates to docs including addtion of Release History section.
 * 2013-06-11   v0.0.1   Initial Plugin release.
