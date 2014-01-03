@@ -67,8 +67,8 @@ __Note:__ only `src` is required. If `dest` is not provided the task will automa
 
 ### Configuration
 
-#### Local Target (required)
-Whilst the Plugin task (no longer) forces you to define a "local" target, we still advise that you always define one. This is because the `local` target will be used as the default destination if one is not explicity provided.
+#### Local Target (recommended ~~required~~)
+Whilst the Plugin task (no longer) forces you to define a `local` target, we still advise that you always define one. This is because the `local` target will be used as the default destination if one is not explicity provided.
 
 Your local target should not require a `ssh_host` parameter and, to avoid complication, should be named exactly as `"local"`.
 
@@ -80,7 +80,6 @@ Your local target should not require a `ssh_host` parameter and, to avoid compli
   "pass": "local_db_password",
   "host": "local_db_host",
   "url": "local_db_url",
-  "ignoreTables": ["table1","table2",...]
   // note that the `local` target does not have an "ssh_host"
 },
 ```
@@ -100,7 +99,6 @@ All other targets may contain valid ssh credentials.
   "url": "development_db_url",
   "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
   "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
-  "ignoreTables": ["table1","table2",...]
 },
 "stage": {
   "title": "Stage",
@@ -111,7 +109,6 @@ All other targets may contain valid ssh credentials.
   "url": "stage_db_url",
   "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
   "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
-  "ignoreTables": ["table1","table2",...]
 },
 "production": {
   "title": "Production",
@@ -122,7 +119,6 @@ All other targets may contain valid ssh credentials.
   "url": "production_db_url",
   "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
   "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
-  "ignoreTables": ["table1","table2",...]
 }
 ```
 
@@ -244,6 +240,59 @@ You may wish to have your backups reside outside the current working directory o
 ~~Default value: ``~~
 
 ~~A string value that represents the default target for the tasks. You can easily override it using the `--target` option~~
+
+## Security
+
+For obvious reasons you may wish to keep your SSH and DB creds outside of source control. A simple way to achieve this is to store your credentials in an external file which is not tracked into VCS.
+
+I prefer to utilise a `.json` or `.yaml` file to store your targets as [Grunt provides methods](http://gruntjs.com/api/grunt.file#grunt.file.readjson) to parse both formats.
+
+### Example JSON file
+
+```json
+{
+  "local": {
+    "title": "Local",
+    "database": "local_db_name",
+    "user": "local_db_username",
+    "pass": "local_db_password",
+    "host": "local_db_host",
+    "url": "local_db_url",
+    "ignoreTables": ["table1","table2",...]
+    // note that the `local` target does not have an "ssh_host"
+  },
+  "develop": {
+    "title": "Development",
+    "database": "development_db_name",
+    "user": "development_db_username",
+    "pass": "development_db_password",
+    "host": "development_db_host",
+    "url": "development_db_url",
+    "ssh_host": "ssh_user@ssh_host",
+    "ignoreTables": ["table1","table2",...]
+  },
+}
+```
+
+### Usage in Grunt config
+These can then be read into your Grunt config and utilised as required.
+
+```js
+grunt.initConfig({
+  // Read external file into Grunt and parse as JSON
+  untracked_targets: grunt.file.readJSON('untracked_targets.json'),
+  
+  deployments: {
+    options: {
+      // options here
+    },
+    local: '<%= untracked_targets.local %>', // reuse externally defined creds
+    develop: '<%= untracked_targets.develop %>' // reuse externally defined creds
+  },
+});
+```
+
+Be sure to exclude your `.json` file from your version control system of choice.
 
 ## Contributing
 
