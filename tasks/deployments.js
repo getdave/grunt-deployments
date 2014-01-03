@@ -73,38 +73,44 @@ module.exports = function(grunt) {
     grunt.registerTask('db_pull', 'Pull from Database', function() {
 
         // Options
-        var task_options    = grunt.config.get('deployments')['options'];
+        var task_options        = grunt.config.get('deployments')['options'];
 
-        // Get the target from the CLI args
-        var target              = grunt.option('target') || task_options['target'];
+        // Get the source from the CLI args
+        var src                 = grunt.option('src') || task_options['src'];
+        if ( typeof src === "undefined" || typeof grunt.config.get('deployments')[src] === "undefined")  {
+            grunt.fail.warn("Invalid source provided. I cannot pull a database from nowhere! Please checked your configuration and provide a valid source.", 6);
+        }
 
-        if ( typeof target === "undefined" || typeof grunt.config.get('deployments')[target] === "undefined")  {
-            grunt.fail.warn("Invalid target provided. I cannot pull a database from nowhere! Please checked your configuration and provide a valid target.", 6);
+        // Get the destination from the CLI args
+        var dest                = grunt.option('dest') || task_options['dest'];
+        if ( typeof dest === "undefined" || typeof grunt.config.get('deployments')[dest] === "undefined")  {
+            grunt.fail.warn("Invalid destination provided. I cannot move a database to a non existent location! Please checked your configuration and provide a valid destination.", 6);
         }
 
 
 
         // Grab the options from the shared "deployments" config options
-        var target_options      = grunt.config.get('deployments')[target];
-        var local_options       = grunt.config.get('deployments').local;
+        var src_options         = grunt.config.get('deployments')[src];
+        var dest_options        = grunt.config.get('deployments')[dest];
 
         // Generate required backup directories and paths
-        var local_backup_paths  = generateBackupPaths("local", task_options);
-        var target_backup_paths = generateBackupPaths(target, task_options);
+        var src_backup_paths    = generateBackupPaths(src, task_options);
+        var dest_backup_paths   = generateBackupPaths(dest, task_options);
 
         // Start execution
-        grunt.log.subhead("Pulling database from '" + target_options.title + "' into Local");
+        grunt.log.subhead("Pulling database from '" + src_options.title + "' into " + dest_options.title);
 
-        // Dump Target DB
-        dbDump(target_options, target_backup_paths );
+        // Dump (backup) the source DB
+        dbDump(src_options, src_backup_paths );
 
-        dbReplace(target_options.url,local_options.url,target_backup_paths.file);
+        // Performance search and replace on DUMP
+        dbReplace(src_options.url,dest_options.url,src_backup_paths.file);
 
         // Backup Local DB
-        dbDump(local_options, local_backup_paths);
+        dbDump(dest_options, dest_backup_paths);
 
         // Import dump into Local
-        dbImport(local_options,target_backup_paths.file);
+        dbImport(dest_options,src_backup_paths.file);
 
         grunt.log.subhead("Operations completed");
 
