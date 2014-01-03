@@ -99,6 +99,8 @@ All other targets may contain valid ssh credentials.
   "url": "development_db_url",
   "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
   "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
+  "ssh_port": "ssh_port",
+  "ignoreTables": ["table1","table2",...]
 },
 "stage": {
   "title": "Stage",
@@ -109,6 +111,8 @@ All other targets may contain valid ssh credentials.
   "url": "stage_db_url",
   "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
   "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
+  "ssh_port": "ssh_port",
+  "ignoreTables": ["table1","table2",...]
 },
 "production": {
   "title": "Production",
@@ -119,6 +123,8 @@ All other targets may contain valid ssh credentials.
   "url": "production_db_url",
   "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
   "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
+  "ssh_port": "ssh_port",
+  "ignoreTables": ["table1","table2",...]
 }
 ```
 
@@ -153,6 +159,7 @@ grunt.initConfig({
       "url": "development_db_url",
       "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
       "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
+      "ssh_port": "ssh_port",
       "ignoreTables": ["table1","table2",...]
     },
     "stage": {
@@ -164,6 +171,7 @@ grunt.initConfig({
       "url": "stage_db_url",
       "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
       "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
+      "ssh_port": "ssh_port",
       "ignoreTables": ["table1","table2",...]
     },
     "production": {
@@ -175,6 +183,7 @@ grunt.initConfig({
       "url": "production_db_url",
       "ssh_user": "ssh_user", // UPDATE: user/host now defined separately
       "ssh_host": "ssh_host", // UPDATE: user/host now defined separately
+      "ssh_port": "ssh_port",
       "ignoreTables": ["table1","table2",...]
     }
   },
@@ -220,6 +229,12 @@ Description: any valid ssh user. The task assumes you have ssh keys setup which 
 #### ssh_host
 Type: `String`
 Description: any valid ssh host string ~~in the format `SSH_USER@SSH_HOST`~~. The task assumes you have ssh keys setup which allow you to remote into your server without requiring the input of a password. As this is an exhaustive topic we will not cover it here but you might like to start by reading [Github's own advice](https://help.github.com/articles/generating-ssh-keys).
+
+#### ssh_port
+Type: `String`
+Default value: `22`
+Description: SSH port number in the format `#####`. Defaults to the standard SSH port of `22`.
+
 
 #### ignoreTables
 Type: `Array`
