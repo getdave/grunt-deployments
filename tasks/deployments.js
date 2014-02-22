@@ -209,7 +209,7 @@ module.exports = function(grunt) {
         }
 
         // Capture output...
-        var output = shell.exec(cmd, {silent: true}).output;
+        var output = shell.exec(cmd, {silent: true}).output.replace( 'Warning: Using a password on the command line interface can be insecure.', '' );
 
         // Write output to file using native Grunt methods
         grunt.file.write( output_paths.file, output );
