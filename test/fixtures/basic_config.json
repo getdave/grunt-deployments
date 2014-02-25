@@ -1,0 +1,20 @@
+{
+	"local": {
+   		"title": "Local",
+   		"database": "deploy_test",        
+        "user": "root",
+        "pass": "pass4burfield",
+        "host": "localhost",  
+        "url": "www.deploytest.dev:8888"
+	},
+	"develop": {
+		"title": "Development Server",
+		"database": "ddeploy_dev", 
+		"user": "ddeploy_dev",
+		"pass": "test4test",
+		"host": "localhost",      
+		"url": "deploytest.com.burfield-dev.com",
+		"ssh_user": "ddeploy",
+		"ssh_host": "134.0.18.114"  
+	}
+}

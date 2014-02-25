@@ -2,7 +2,7 @@
  * grunt-deployments
  * https://github.com/getdave/grunt-deployments
  *
- * Copyright (c) 2013 David Smith
+ * Copyright (c) 2014 David Smith
  * Licensed under the MIT license.
  */
 
@@ -10,56 +10,98 @@
 
 module.exports = function(grunt) {
 
+  // load all grunt tasks
+  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
   // Project configuration.
   grunt.initConfig({
-    db_fixture: grunt.file.readJSON('test/fixtures/test_db.json'),
-
+    db_fixture: grunt.file.readJSON('test/fixtures/basic_config.json'),
+    vows: {
+      all: {
+        options: {
+            // String {spec|json|dot-matrix|xunit|tap}
+            // defaults to "dot-matrix"
+            reporter: "spec",
+            // String or RegExp which is
+            // matched against title to
+            // restrict which tests to run
+            // onlyRun: /helper/,
+            // Boolean, defaults to false
+            verbose: false,
+            // Boolean, defaults to false
+            silent: false,
+            // Colorize reporter output,
+            // boolean, defaults to true
+            colors: true,
+            // Run each test in its own
+            // vows process, defaults to
+            // false
+            isolate: false,
+            // String {plain|html|json|xml}
+            // defaults to none
+            coverage: "json"
+        },
+        // String or array of strings
+        // determining which files to include.
+        // This option is grunt's "full" file format.
+        src: ["test/**/*_test.js"]
+      }
+    },
     jshint: {
-      all: [
-        'Gruntfile.js',
-        'tasks/*.js',
-        '<%= nodeunit.tests %>',
-      ],
+      gruntfile: {
+        src: 'Gruntfile.js'
+      },
+      lib: {
+        src: ['tasks/*.js']
+      },
+      test: {
+        src: ['test/**/*.js']
+      },
       options: {
         jshintrc: '.jshintrc',
       },
     },
 
+    watch: {
+      gruntfile: {
+        files: '<%= jshint.gruntfile.src %>',
+        tasks: ['jshint:gruntfile']
+      },
+      lib: {
+        files: '<%= jshint.lib.src %>',
+        tasks: ['jshint:lib', 'vows']
+      },
+      test: {
+        files: '<%= jshint.test.src %>',
+        tasks: ['jshint:test', 'vows']
+      }
+    },
+
     // Before generating any new files, remove any previously-created files.
     clean: {
       tests: ['tmp'],
+      backups: ['./backups'],
     },
 
     deployments: {
         options: {
             backups_dir: ''
         },
-        local: '<%= db_fixture.local %>',
-        develop: '<%= db_fixture.develop %>'
-    },
-
-    // Unit tests.
-    nodeunit: {
-      tests: ['test/*_test.js'],
+        local: '<%= db_fixture.local %>', // make sure you've created valid fixture DB creds
+        develop: '<%= db_fixture.develop %>' // make sure you've created valid fixture DB creds
     },
 
   });
 
 
-  // Actually load this plugin's task(s).
+// Actually load this plugin's task(s).
   grunt.loadTasks('tasks');
-
-  // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'deployments', 'nodeunit']);
+  grunt.registerTask('test', ['clean', 'vows']);
 
   // By default, lint and run all tests.
-  grunt.registerTask('default', ['jshint', 'test']);
+  grunt.registerTask('default', ['clean', 'watch']);
 
 };
