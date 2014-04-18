@@ -55,7 +55,7 @@ module.exports = function(grunt) {
         dbDump(local_options, local_backup_paths);
 
         // Search and Replace database refs
-        dbReplace( local_options.url, target_options.url, local_backup_paths.file );
+        dbReplace( local_options.url, target_options.url, local_backup_paths );
 
         // Dump target DB
         dbDump(target_options, target_backup_paths);
