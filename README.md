@@ -236,6 +236,83 @@ Default value: ``
 
 A string value that represents the default target for the tasks. You can easily override it using the `--target` option
 
+## Troubleshooting
+
+### Deploying to cPanel servers
+
+In some cases, you may receive this error:
+```
+stdin: is not a tty
+```
+To fix this go to the etc/ folder and edit the bashrc file.
+
+If you have a line that reads:
+```
+mesg y
+```
+Comment it out, and this should get rid of the error.
+
+If you do not see mesg y in your bashrc file, place the following into it and save:
+```
+if `tty -s`; then
+ mesg n
+fi
+```
+
+
+### MAMP & Local Stacks
+
+If you are using MAMP, AMPPS or other local stacks you may run into a couple of errors. This happens because MySQL is not in the expected server directory for these applications. 
+This issue can produce errors such as:
+```
+ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '/bin/sh: mysqldump: command not found' at line 1
+```
+```
+/bin/sh command not found
+```
+
+There are two ways to point to the correct directory for MAMP's MySQL. 
+
+1. Create a symlink for mysql & mysqldump
+2. Export the path in .bash_profile
+
+#### Symlink on OSX
+
+First, confirm the path to mysql within your local stack.
+You'll then open the terminal and enter:
+```
+sudo ln -s /Applications/MAMP/Library/bin/mysqldump /usr/local/bin/mysqldump
+```
+& then:
+
+```
+sudo ln -s /Applications/MAMP/Library/bin/mysql /usr/local/bin/mysql
+```
+
+The path used above is an example for MAMP. Be sure that the first path is correct, and that it contains mysql & mysqldump on your system.
+
+#### Bash Profile on OSX
+
+First, confirm the directory within your local stack that contains mysql.
+
+1. In the terminal, cd to ~/
+2. List out the directory to check for a .bash_profile file
+3. If you do not have one, run:
+```
+touch .bash_profile
+```
+to create the file.
+4. You now need to edit the file. You can do this any number of ways, through vim, nano or your own choice of editor. I will use nano as the example here. Enter:
+```
+nano .bash_profile
+```
+
+4. Add the following (substituting your specific path to mysql - this example is for MAMP) to the .bash_profile file:
+```
+export PATH=$PATH:/Applications/MAMP/Library/bin
+```
+Then save and exit the editor (in nano by pressing CTRL+O, and CTRL+X) then restart the terminal.
+
 ## Contributing
 
 Contributions to this plugin are most welcome. This is very much a Alpha release and so if you find a problem please consider raising a pull request or creating a Issue which describes the problem you are having and proposes a solution.
