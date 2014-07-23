@@ -191,11 +191,15 @@ module.exports = function(grunt) {
             }
         });
 
-
         // 3) Test whether MYSQL DB is local or whether requires remote access via SSH
         if (typeof config.ssh_host === "undefined") { // it's a local connection
             grunt.log.writeln("Creating DUMP of local database");
-            cmd = tpl_mysqldump;
+            // Run mysqldump without user, pass and host as this info should be saved within ~/.my.cnf
+            cmd = grunt.template.process(tpls.mysqldumplocal, {
+                data: {
+                    database: config.database
+                }
+            });
 
         } else { // it's a remote connection
             var tpl_ssh = grunt.template.process(tpls.ssh, {
@@ -250,6 +254,8 @@ module.exports = function(grunt) {
         search_replace: "sed -i '' 's#<%= search %>#<%= replace %>#g' <%= path %>",
 
         mysqldump: "mysqldump -h <%= host %> -u<%= user %> -p<%= pass %> <%= database %>",
+
+        mysqldumplocal: "mysqldump <%= database %>",
 
         mysql: "mysql -h <%= host %> -u <%= user %> -p<%= pass %> <%= database %>",
 
