@@ -249,9 +249,9 @@ module.exports = function(grunt) {
 
         search_replace: "sed -i '' 's#<%= search %>#<%= replace %>#g' <%= path %>",
 
-        mysqldump: "mysqldump -h <%= host %> -u<%= user %> -p<%= pass %> <%= database %>",
+        mysqldump: "MYSQL_PWD=<%= pass %> mysqldump -h <%= host %> -u<%= user %> <%= database %>",
 
-        mysql: "mysql -h <%= host %> -u <%= user %> -p<%= pass %> <%= database %>",
+        mysql: "MYSQL_PWD=<%= pass %> mysql -h <%= host %> -u <%= user %> <%= database %>",
 
         ssh: "ssh <%= host %>",
     };
@@ -259,8 +259,6 @@ module.exports = function(grunt) {
 
 
 };
-
-
 
 
 
