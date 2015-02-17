@@ -210,7 +210,7 @@ module.exports = function(grunt) {
 
         // Capture output...
         var output = shell.exec(cmd, {silent: true}).output;
-		if(output.search("warning")!=-1){
+		if(output.search("Warning: Using a password on the command line interface can be insecure.")!=-1){
 		// break the textblock into an array of lines
 		var lines = output.split('\n');
 		// remove one line, starting at the first position
