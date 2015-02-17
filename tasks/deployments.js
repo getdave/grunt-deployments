@@ -210,6 +210,15 @@ module.exports = function(grunt) {
 
         // Capture output...
         var output = shell.exec(cmd, {silent: true}).output;
+		if(output.search("Warning: Using a password on the command line interface can be insecure.")!=-1){
+		// break the textblock into an array of lines
+		var lines = output.split('\n');
+		// remove one line, starting at the first position
+		lines.splice(0,1);
+		// join the array back into a single string
+		output = lines.join('\n');
+		}
+		
 
         // Write output to file using native Grunt methods
         grunt.file.write( output_paths.file, output );
