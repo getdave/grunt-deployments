@@ -165,11 +165,11 @@ module.exports = function(grunt) {
 
          // Execute cmd
         if (shell.exec(cmd).code !== 0) {
-			grunt.log.oklns("Database import failed");
-			shell.exit(1);
-		} else {
-			grunt.log.oklns("Database imported succesfully");
-		}
+	    grunt.log.oklns("Database import failed");
+	    shell.exit(1);
+	} else {
+	    grunt.log.oklns("Database imported succesfully");
+	}
     }
 
 
