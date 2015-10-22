@@ -164,9 +164,12 @@ module.exports = function(grunt) {
         }
 
          // Execute cmd
-        shell.exec(cmd);
-
-        grunt.log.oklns("Database imported succesfully");
+        if (shell.exec(cmd).code !== 0) {
+			grunt.log.oklns("Database import failed");
+			shell.exit(1);
+		} else {
+			grunt.log.oklns("Database imported succesfully");
+		}
     }
 
 
